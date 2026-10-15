@@ -1,80 +1,766 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<title></title>
-	<meta name="generator" content="LibreOffice 25.2.3.2 (Linux)"/>
-	<meta name="created" content="2026-10-15T17:36:02.283096212"/>
-	<meta name="changed" content="2026-10-15T17:37:11.500700131"/>
-	<style type="text/css">
-		@page { size: 8.5in 11in; margin: 0.79in }
-		p { margin-bottom: 0.1in; line-height: 115%; background: transparent }
-	</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AFRAB Formulation Studio</title>
+<style>
+:root{
+  --brand:#0d5751;--brand-dark:#083b37;--brand-light:#e6f4f1;
+  --bg:#f4f6f8;--line:#d7dee5;--ink:#1a2027;--muted:#6b7280;
+  --ok:#0f7b4f;--ok-bg:#d9f3e1;
+  --warn:#b00020;--warn-bg:#fde5e9;
+  --amber:#8a5a00;--amber-bg:#fdf3dc;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+     background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+header{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-dark) 100%);
+       color:#fff;padding:16px 24px;display:flex;justify-content:space-between;
+       align-items:center;flex-wrap:wrap;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+header h1{font-size:18px;letter-spacing:.3px}
+header small{opacity:.85;display:block;font-size:12px}
+.user-badge{font-size:12px;text-align:right;opacity:.9}
+nav{background:#fff;border-bottom:1px solid var(--line);padding:0 24px;
+    display:flex;gap:2px;overflow-x:auto;position:sticky;top:0;z-index:10}
+nav button{background:none;border:none;padding:13px 16px;cursor:pointer;
+           font:inherit;color:#555;border-bottom:3px solid transparent;
+           white-space:nowrap;font-weight:500}
+nav button.active{color:var(--brand);border-color:var(--brand);font-weight:600}
+nav button:hover{background:#f5f8fb}
+main{padding:20px 24px 60px;max-width:1500px;margin:0 auto}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;
+      padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card h2{font-size:13px;margin:0 0 16px;color:var(--brand-dark);
+         text-transform:uppercase;letter-spacing:1px;
+         border-bottom:2px solid var(--brand);padding-bottom:8px;
+         display:flex;justify-content:space-between;align-items:center;
+         flex-wrap:wrap;gap:8px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 24px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:var(--muted);font-weight:600;
+             text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{
+  font:inherit;padding:8px 11px;border:1px solid var(--line);
+  border-radius:6px;background:#fff;color:var(--ink);width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(13,87,81,.12)}
+.field textarea{resize:vertical;min-height:60px;font-family:inherit}
+.btn{padding:9px 16px;border-radius:8px;font:inherit;font-weight:600;
+     border:1px solid transparent;cursor:pointer;display:inline-flex;
+     align-items:center;gap:7px;transition:all .12s;white-space:nowrap;font-size:13px}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-dark)}
+.btn-green{background:var(--ok);color:#fff}
+.btn-green:hover{background:#0b6240}
+.btn-outline{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn-outline:hover{background:var(--brand-light);border-color:#c3ddd8}
+.btn-danger{background:#fff;color:var(--warn);border-color:var(--warn)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#eef3f7;color:var(--brand-dark);font-size:11px;font-weight:700;
+   text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--line)}
+tbody tr:hover{background:#fafcfe}
+tr.total-row td{background:#f1f7fb;font-weight:700;color:var(--brand-dark)}
+.pill{display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;
+      font-weight:700;white-space:nowrap;text-transform:uppercase}
+.pill-ok{background:var(--ok-bg);color:var(--ok)}
+.pill-fail{background:var(--warn-bg);color:var(--warn)}
+.pill-warn{background:var(--amber-bg);color:var(--amber)}
+.pill-stage{background:var(--brand-light);color:var(--brand-dark)}
+.status{color:var(--muted);padding:8px 0;font-size:13px}
+.status.error{color:var(--warn);font-weight:600}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+          gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.kpi .n{font-size:26px;color:var(--brand-dark);font-weight:700;line-height:1.1}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;
+        letter-spacing:.6px;font-weight:700;margin-top:4px}
+.callout{border-radius:10px;padding:12px 16px;font-size:13px;
+         margin-bottom:14px;border-left:4px solid}
+.callout.info{background:var(--brand-light);border-color:var(--brand);color:var(--brand-dark)}
+.callout.warn{background:var(--amber-bg);border-color:var(--amber);color:#5c3d00}
+.callout.fail{background:var(--warn-bg);border-color:var(--warn);color:#6b0010}
+.empty-state{padding:40px 20px;text-align:center;color:var(--muted);
+             background:#fff;border:1px dashed var(--line);border-radius:14px}
+.empty-state h3{color:var(--brand-dark);font-size:16px;margin-bottom:8px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)}
+.picker-wrap{max-height:520px;overflow-y:auto;border:1px solid var(--line);
+             border-radius:10px;background:#fff}
+.picker-wrap th{position:sticky;top:0;z-index:2}
+.picker-wrap input[type=number],.picker-wrap input[type=text]{
+  padding:5px 8px;font-size:12.5px;width:100%;border:1px solid var(--line);
+  border-radius:6px;font-family:inherit}
+.picker-wrap select{padding:5px 6px;font-size:12.5px;border:1px solid var(--line);
+                    border-radius:6px;background:#fff}
+.picker-wrap input:disabled,.picker-wrap select:disabled{background:#f6f8f8;color:#b0bcbb}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;
+       padding:22px 24px;margin-top:20px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.panel h3{font-size:15px;color:var(--brand-dark);margin-bottom:16px;font-weight:700}
+@media print{
+  header,nav,.btn,.status{display:none!important}
+  body{background:#fff;font-size:11px}
+  main{padding:0;max-width:100%}
+  .card{box-shadow:none;border-color:#999;padding:14px;margin-bottom:12px}
+  table{font-size:10.5px}th,td{padding:5px 7px}
+}
+</style>
 </head>
-<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><p style="line-height: 100%; margin-bottom: 0in">
-&lt;!DOCTYPE html&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;html lang=&quot;en&quot;&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;head&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;meta
-charset=&quot;utf-8&quot;&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;meta
-name=&quot;viewport&quot; content=&quot;width=device-width,
-initial-scale=1&quot;&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;title&gt;AFRAB
-Formulation Studio&lt;/title&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;link
-rel=&quot;stylesheet&quot; href=&quot;styles.css&quot;&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/head&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;body&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<body>
 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;header&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;div&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">    &lt;h1&gt;AFRAB
-Formulation Studio&lt;/h1&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">    &lt;small&gt;Trial
-Monitoring &amp;amp; BMR Tracking System&lt;/small&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;/div&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;small
-id=&quot;userBadge&quot; class=&quot;user-badge&quot;&gt;Loading…&lt;/small&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/header&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<header>
+  <div>
+    <h1>AFRAB Formulation Studio</h1>
+    <small>Trial Monitoring &amp; BMR Tracking System</small>
+  </div>
+  <small id="userBadge" class="user-badge">Loading…</small>
+</header>
 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;nav id=&quot;nav&quot;&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;dashboard&quot;&gt;Dashboard&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;materials&quot;&gt;Raw Materials&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;products&quot;&gt;Products&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;formulation&quot; class=&quot;active&quot;&gt;Formulation&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;trials&quot;&gt;Trials&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;steps&quot;&gt;Production Steps&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;bmr&quot;&gt;BMR&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;button
-data-tab=&quot;archive&quot;&gt;Archive&lt;/button&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/nav&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<nav id="nav">
+  <button data-tab="dashboard">Dashboard</button>
+  <button data-tab="materials">Raw Materials</button>
+  <button data-tab="products">Products</button>
+  <button data-tab="formulation" class="active">Formulation</button>
+  <button data-tab="trials">Trials</button>
+  <button data-tab="steps">Steps</button>
+  <button data-tab="bmr">BMR</button>
+  <button data-tab="archive">Archive</button>
+</nav>
 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;main&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;div
-id=&quot;status&quot; class=&quot;status&quot;&gt;Booting…&lt;/div&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">  &lt;div
-id=&quot;view&quot;&gt;&lt;/div&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/main&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<main>
+  <div id="status" class="status">Booting…</div>
+  <div id="view"></div>
+</main>
 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;script
-src=&quot;app.js&quot;&gt;&lt;/script&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/body&gt;</p>
-<p style="line-height: 100%; margin-bottom: 0in">&lt;/html&gt;</p>
+<script>
+const API_URL  = 'https://script.google.com/macros/s/AKfycbxptzrN30F71GJ-ZqHpo6wL9WdnHLH2eVBNlknreDod_yY3Yk9srIWqz2ySBW98XrB6/exec';
+const API_TOKEN = 'afrab-secret-2026-change-me';
+const CURRENCY = '₦';
+const $ = id => document.getElementById(id);
+
+const DOSAGE_FORMS = [
+  {name:'Tablet / Caplet', short:'TABLET'},
+  {name:'Capsule', short:'CAPSULE'},
+  {name:'Oral Liquid / Syrup', short:'SYRUP'},
+  {name:'Suspension / Emulsion', short:'SUSPENSION'},
+  {name:'Cream / Ointment / Gel', short:'SEMI_SOLID'},
+  {name:'Dry Powder / Sachet / Drops', short:'DRY_POWDER'},
+  {name:'Injection / Sterile', short:'INJECTION'}
+];
+const STAGES = ['Lab Bench','Pilot Scale','Stability','Commercial'];
+const STATUSES = ['PASS','FAIL','ON HOLD','IN PROGRESS'];
+const FAIL_CATS = ['Phase Separation','Assay OOS','Dissolution Fail','pH Out of Range',
+  'Appearance','Microbial','Stability','Hardness / Friability','Reconstitution',
+  'Weight Variation','Sedimentation','Viscosity Drift','Other'];
+const PRODUCT_STATUSES = ['Pilot Trial / Formulation','Pilot Batch Trial',
+  'Stability Testing','Commercial / Active','On Hold','Discontinued'];
+
+const state = {
+  users:[], materials:[], products:[], versions:[], recipes:[],
+  trends:{}, stages:{}, currentUser:null, tab:'formulation',
+  activeProduct:'', activeVersion:'', batchVolume:1000,
+  calc:null, steps:[], stepsVersion:'', matFilter:''
+};
+
+function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function money(n){ if(n==null || isNaN(n)) return '—';
+  return CURRENCY + Number(n).toLocaleString(undefined,
+    {minimumFractionDigits:2, maximumFractionDigits:2}); }
+function statusPill(s){ s=s||'';
+  if (/pass|approv|releas|conform/i.test(s)) return '<span class="pill pill-ok">'+esc(s)+'</span>';
+  if (/fail|reject|discontinu/i.test(s)) return '<span class="pill pill-fail">'+esc(s)+'</span>';
+  return '<span class="pill pill-warn">'+esc(s)+'</span>'; }
+function stagePill(s){ s=s||'';
+  if (/commercial/i.test(s)) return '<span class="pill pill-ok">'+esc(s)+'</span>';
+  return '<span class="pill pill-stage">'+esc(s)+'</span>'; }
+function setStatus(msg, isErr){
+  const el=$('status'); if(!el) return;
+  el.textContent = msg || '';
+  el.classList.toggle('error', !!isErr); }
+
+async function api(action, payload) {
+  const body = { action: action, token: API_TOKEN, payload: payload || {} };
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(body)
+  });
+  const json = await res.json();
+  if (!json.ok) throw new Error(json.error || 'API error');
+  return json.data;
+}
+
+$('nav').addEventListener('click', function(e){
+  const btn = e.target.closest('button[data-tab]');
+  if (!btn) return;
+  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.tab = btn.dataset.tab;
+  render();
+});
+
+async function boot(){
+  try {
+    setStatus('Loading…');
+    const d = await api('getAppData');
+    state.users = d.users || [];
+    state.materials = d.materials || [];
+    state.products = d.products || [];
+    state.versions = d.versions || [];
+    state.recipes = d.recipes || [];
+    state.trends = d.trends || {};
+    state.stages = d.stages || {};
+    state.currentUser = state.users[0] || null;
+    $('userBadge').textContent = state.currentUser
+      ? state.currentUser.name + ' — ' + (state.currentUser.role || '')
+      : 'No users';
+    if (state.products.length) {
+      state.activeProduct = state.products[0].id;
+      state.activeVersion = state.activeProduct + '-V1.0';
+    }
+    setStatus(state.products.length + ' products • ' +
+              state.materials.length + ' materials • ' +
+              state.versions.length + ' versions');
+    render();
+  } catch (e) {
+    setStatus('Failed to load: ' + e.message, true);
+  }
+}
+
+function render(){
+  setStatus('');
+  switch (state.tab) {
+    case 'dashboard':   return renderDashboard();
+    case 'materials':   return renderMaterials();
+    case 'products':    return renderProducts();
+    case 'formulation': return renderFormulation();
+    case 'trials':      return renderTrials();
+    case 'steps':       return renderSteps();
+    case 'bmr':         return renderBmr();
+    case 'archive':     return renderArchive();
+  }
+}
+
+/* ============ DASHBOARD ============ */
+function renderDashboard(){
+  const t = state.trends || {total:0,passed:0,failed:0,byCategory:{}};
+  const s = state.stages || {lab:0,stability:0,pilot:0,commercial:0};
+  const total = Object.values(t.byCategory).reduce(function(a,b){return a+b;},0) || 1;
+  $('view').innerHTML =
+    '<div class="kpi-grid">' +
+      '<div class="kpi"><div class="n">' + state.products.length + '</div><div class="l">Products</div></div>' +
+      '<div class="kpi"><div class="n">' + state.materials.length + '</div><div class="l">Materials</div></div>' +
+      '<div class="kpi"><div class="n">' + (t.total||0) + '</div><div class="l">Versions</div></div>' +
+      '<div class="kpi"><div class="n">' + (t.passed||0) + '</div><div class="l">Passing</div></div>' +
+      '<div class="kpi"><div class="n">' + (t.failed||0) + '</div><div class="l">Failed</div></div>' +
+    '</div>' +
+    '<div class="card"><h2>Stage Pipeline</h2><div class="kpi-grid" style="margin-bottom:0">' +
+      '<div class="kpi"><div class="n">' + (s.lab||0) + '</div><div class="l">LAB</div></div>' +
+      '<div class="kpi"><div class="n">' + (s.pilot||0) + '</div><div class="l">PLT</div></div>' +
+      '<div class="kpi"><div class="n">' + (s.stability||0) + '</div><div class="l">STB</div></div>' +
+      '<div class="kpi"><div class="n">' + (s.commercial||0) + '</div><div class="l">COM</div></div>' +
+    '</div></div>' +
+    '<div class="card"><h2>Failure Trends</h2>' +
+      (t.failed === 0 ? '<p class="muted">No failures logged.</p>'
+        : Object.entries(t.byCategory).sort(function(a,b){return b[1]-a[1];}).map(function(x){
+            return '<div style="margin-bottom:10px">' +
+              '<div style="font-size:12px;font-weight:600;margin-bottom:3px">' + esc(x[0]) + ' — ' + x[1] + '</div>' +
+              '<div style="height:20px;background:#eef3f2;border-radius:4px;overflow:hidden">' +
+              '<div style="height:100%;width:' + (x[1]/total*100).toFixed(0) + '%;background:#b00020;border-radius:4px"></div>' +
+              '</div></div>';
+          }).join('')) +
+    '</div>';
+}
+
+/* ============ MATERIALS ============ */
+function renderMaterials(){
+  $('view').innerHTML =
+    '<div class="card"><h2>Raw Materials' +
+      '<button class="btn btn-primary btn-sm" onclick="openMaterialForm()">+ New</button></h2>' +
+      (state.materials.length === 0
+        ? '<div class="empty-state"><h3>No materials yet</h3><p>Click + New.</p></div>'
+        : '<input placeholder="Filter…" style="width:100%;margin-bottom:12px;padding:8px 11px;border:1px solid var(--line);border-radius:6px" oninput="state.matFilter=this.value;paintMaterials()">' +
+          '<div id="matTable"></div>') +
+    '</div><div id="panelSlot"></div>';
+  if (state.materials.length) paintMaterials();
+}
+function paintMaterials(){
+  const q = (state.matFilter||'').toLowerCase();
+  const list = state.materials.filter(function(m){
+    return !q || m.name.toLowerCase().indexOf(q) >= 0 ||
+           m.id.toLowerCase().indexOf(q) >= 0;
+  });
+  $('matTable').innerHTML =
+    '<table><thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Limit</th>' +
+    '<th>Cost ' + CURRENCY + '/kg</th><th></th></tr></thead><tbody>' +
+    list.map(function(m){
+      return '<tr><td>' + esc(m.id) + '</td><td><b>' + esc(m.name) + '</b></td>' +
+        '<td><small>' + esc(m.category) + '</small></td>' +
+        '<td>' + esc(m.limit) + '</td>' +
+        '<td>' + (m.cost ? money(m.cost) : '—') + '</td>' +
+        '<td><button class="btn btn-outline btn-xs" onclick="openMaterialForm(' +
+          JSON.stringify(m).replace(/'/g,"&#39;") + ')">Edit</button></td></tr>';
+    }).join('') + '</tbody></table>';
+}
+function openMaterialForm(m){
+  m = m || {id:'',name:'',form:'',category:'',limit:'',density:'',cost:'',storage:''};
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>' + (m.id ? 'Edit' : 'New') + ' Material</h3><div class="grid">' +
+    '<div class="field"><label>ID</label><input id="mf_id" value="' + esc(m.id) + '" placeholder="auto"></div>' +
+    '<div class="field"><label>Name</label><input id="mf_name" value="' + esc(m.name) + '"></div>' +
+    '<div class="field"><label>Form</label><input id="mf_form" value="' + esc(m.form) + '"></div>' +
+    '<div class="field"><label>Category</label><input id="mf_cat" value="' + esc(m.category) + '"></div>' +
+    '<div class="field"><label>Max Limit</label><input id="mf_limit" value="' + esc(m.limit) + '"></div>' +
+    '<div class="field"><label>Density</label><input id="mf_den" type="number" step="0.01" value="' + (m.density||'') + '"></div>' +
+    '<div class="field"><label>Cost ' + CURRENCY + '/kg</label><input id="mf_cost" type="number" step="0.01" value="' + (m.cost||'') + '"></div>' +
+    '<div class="field" style="grid-column:1/-1"><label>Storage</label><textarea id="mf_storage">' + esc(m.storage) + '</textarea></div>' +
+    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
+    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+    '<button class="btn btn-green" onclick="submitMaterial()">Save</button></div></div>';
+}
+async function submitMaterial(){
+  const m = { id:$('mf_id').value.trim(), name:$('mf_name').value.trim(),
+    form:$('mf_form').value.trim(), category:$('mf_cat').value.trim(),
+    limit:$('mf_limit').value.trim(), density:parseFloat($('mf_den').value)||0,
+    cost:parseFloat($('mf_cost').value)||0, storage:$('mf_storage').value.trim() };
+  if (!m.name) return alert('Name required');
+  try { setStatus('Saving…');
+    await api('saveMaterial', {mat:m, user:state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = ''; await reload();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ============ PRODUCTS ============ */
+function renderProducts(){
+  $('view').innerHTML =
+    '<div class="card"><h2>Products' +
+      '<button class="btn btn-primary btn-sm" onclick="openProductForm()">+ New</button></h2>' +
+      (state.products.length === 0
+        ? '<div class="empty-state"><h3>No products yet</h3></div>'
+        : '<div id="prodTable"></div>') +
+    '</div><div id="panelSlot"></div>';
+  if (state.products.length) paintProducts();
+}
+function paintProducts(){
+  $('prodTable').innerHTML =
+    '<table><thead><tr><th>ID</th><th>Name</th><th>Form</th><th>Status</th><th></th></tr></thead><tbody>' +
+    state.products.map(function(p){
+      return '<tr><td>' + esc(p.id) + '</td><td><b>' + esc(p.name) + '</b></td>' +
+        '<td>' + esc(p.form) + '</td><td>' + statusPill(p.status) + '</td>' +
+        '<td><button class="btn btn-outline btn-xs" onclick="useForFormulation(\'' + p.id + '\')">Formulate</button></td></tr>';
+    }).join('') + '</tbody></table>';
+}
+function openProductForm(p){
+  p = p || {id:'',name:'',category:'',form:DOSAGE_FORMS[0].name,delivery:'',
+            packSize:'',shelfLife:24,storage:'',status:PRODUCT_STATUSES[0]};
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>New Product</h3><div class="grid">' +
+    '<div class="field"><label>ID</label><input id="pf_id" value="' + esc(p.id) + '" placeholder="auto"></div>' +
+    '<div class="field"><label>Name</label><input id="pf_name" value="' + esc(p.name) + '"></div>' +
+    '<div class="field"><label>Category</label><input id="pf_cat" value="' + esc(p.category) + '"></div>' +
+    '<div class="field"><label>Dosage Form</label><select id="pf_form">' +
+      DOSAGE_FORMS.map(function(d){
+        return '<option ' + (d.name===p.form?'selected':'') + '>' + d.name + '</option>';
+      }).join('') + '</select></div>' +
+    '<div class="field"><label>Pack Size</label><input id="pf_pack" value="' + esc(p.packSize) + '"></div>' +
+    '<div class="field"><label>Shelf Life (mo)</label><input id="pf_shelf" type="number" value="' + (p.shelfLife||24) + '"></div>' +
+    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
+    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+    '<button class="btn btn-green" onclick="submitProduct()">Save</button></div></div>';
+}
+async function submitProduct(){
+  const p = { id:$('pf_id').value.trim(), name:$('pf_name').value.trim(),
+    category:$('pf_cat').value.trim(), form:$('pf_form').value,
+    delivery:'', packSize:$('pf_pack').value.trim(),
+    shelfLife:parseFloat($('pf_shelf').value)||24, storage:'',
+    status:PRODUCT_STATUSES[0] };
+  if (!p.name) return alert('Name required');
+  try { setStatus('Saving…');
+    await api('saveProduct', {product:p, user:state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = ''; await reload();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+function useForFormulation(pid){
+  state.activeProduct = pid; state.activeVersion = pid + '-V1.0';
+  state.tab = 'formulation';
+  document.querySelectorAll('#nav button').forEach(function(b){
+    b.classList.toggle('active', b.dataset.tab === 'formulation');
+  });
+  render();
+}
+
+/* ============ FORMULATION ============ */
+function renderFormulation(){
+  if (!state.products.length) {
+    $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No products yet</h3></div></div>';
+    return;
+  }
+  const product = state.products.find(function(p){ return p.id === state.activeProduct; }) || state.products[0];
+  state.activeProduct = product.id;
+  if (!state.activeVersion) state.activeVersion = product.id + '-V1.0';
+  const isLiquid = /liquid|syrup|drop|solution|suspension|emulsion|inject/i.test(product.form || '');
+  $('view').innerHTML =
+    '<div class="card"><h2>Formulation' +
+      '<span><button class="btn btn-outline btn-sm" onclick="recalc()">Recalculate</button> ' +
+      '<button class="btn btn-primary btn-sm" onclick="openPicker()">+ Add Ingredients</button></span></h2>' +
+      '<div class="grid">' +
+      '<div class="field"><label>Product</label><select onchange="state.activeProduct=this.value;state.activeVersion=this.value+\'-V1.0\';renderFormulation()">' +
+        state.products.map(function(p){
+          return '<option value="' + p.id + '" ' + (p.id===product.id?'selected':'') + '>' + esc(p.id) + ' — ' + esc(p.name) + '</option>';
+        }).join('') + '</select></div>' +
+      '<div class="field"><label>Version</label><input value="' + esc(state.activeVersion) + '" onchange="state.activeVersion=this.value;recalc()"></div>' +
+      '<div class="field"><label>Batch Volume (' + (isLiquid?'L':'kg') + ')</label><input type="number" value="' + state.batchVolume + '" onchange="state.batchVolume=parseFloat(this.value)||1000;recalc()"></div>' +
+      '</div><div id="calcSlot"></div></div><div id="pickerSlot"></div>';
+  recalc();
+}
+async function recalc(){
+  const slot = $('calcSlot'); if (!slot) return;
+  slot.innerHTML = '<p class="muted">Calculating…</p>';
+  try {
+    const c = await api('calculate', {productId:state.activeProduct, versionId:state.activeVersion, batchVolume:state.batchVolume});
+    state.calc = c; paintCalc(c);
+  } catch(e){ slot.innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+}
+function paintCalc(c){
+  const over = c.lines.filter(function(l){ return l.overLimit; });
+  $('calcSlot').innerHTML =
+    (over.length ? '<div class="callout fail"><b>⚠ ' + over.length + ' over limit</b></div>' : '') +
+    (c.lines.length && !c.balanced ? '<div class="callout warn"><b>Not balanced:</b> ' + c.totalPct + '%</div>' : '') +
+    '<div class="grid" style="margin-top:12px">' +
+    '<div class="field"><label>Theoretical Yield</label><input value="' + c.theoreticalYield.toLocaleString() + ' ' + esc(c.yieldUnit) + '" readonly></div>' +
+    '<div class="field"><label>Total %</label><input value="' + c.totalPct + '%" readonly></div>' +
+    '<div class="field"><label>Total Cost</label><input value="' + money(c.totalCost) + '" readonly></div>' +
+    '<div class="field"><label>Balance</label><input value="' + (c.balanced?'✓ Balanced':'⚠ Check') + '" readonly></div>' +
+    '</div>' +
+    '<table style="margin-top:14px"><thead><tr><th>ID</th><th>Ingredient</th><th>Phase</th>' +
+    '<th>Unit Qty</th><th>% w/w</th><th>Batch (kg)</th><th>Cost</th><th>Check</th><th></th></tr></thead><tbody>' +
+    (c.lines.length === 0
+      ? '<tr><td colspan="9" class="muted" style="text-align:center;padding:20px">No lines yet. Click + Add Ingredients.</td></tr>'
+      : c.lines.map(function(l){
+          return '<tr><td>' + esc(l.recipeId) + '</td><td><b>' + esc(l.ingredient) + '</b></td>' +
+            '<td><small>' + esc(l.phase) + '</small></td>' +
+            '<td>' + l.unitQty + ' ' + esc(l.unit) + '</td>' +
+            '<td>' + l.pct + '%</td><td>' + l.batchKg + '</td>' +
+            '<td>' + (l.costPerBatch ? money(l.costPerBatch) : '—') + '</td>' +
+            '<td>' + (l.overLimit ? '<span class="pill pill-fail">OVER</span>' : '<span class="pill pill-ok">OK</span>') + '</td>' +
+            '<td><button class="btn btn-danger btn-xs" onclick="deleteRecipe(\'' + l.recipeId + '\')">✕</button></td></tr>';
+        }).join('')) +
+    (c.lines.length ? '<tr class="total-row"><td colspan="4">TOTAL</td><td>' + c.totalPct + '%</td>' +
+      '<td>' + c.lines.reduce(function(s,l){return s+l.batchKg;},0).toFixed(3) + '</td>' +
+      '<td>' + money(c.totalCost) + '</td><td colspan="2">' + (c.balanced?'Balanced':'Adjust') + '</td></tr>' : '') +
+    '</tbody></table>';
+}
+function openPicker(){
+  const phases = ['Phase A (API Active Blending)','Phase B (Pre-mix)','Phase C (Bulk Make-up)',
+    'Phase D (q.s. / Adjust)','Stage 1 (Dispensing)','Stage 2 (Processing)','Stage 3 (Packaging)'];
+  const sorted = state.materials.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  $('pickerSlot').innerHTML =
+    '<div class="panel"><h3>Add Ingredients — Multi-Pick</h3>' +
+    '<div class="grid" style="margin-bottom:14px">' +
+    '<div class="field"><label>Default Phase</label><select id="bulkPhase">' +
+      phases.map(function(p){return '<option>'+p+'</option>';}).join('') + '</select></div>' +
+    '<div class="field"><label>Filter</label><input placeholder="Type…" oninput="filterPicker(this.value)"></div>' +
+    '</div><div class="picker-wrap"><table><thead><tr><th style="width:34px"></th><th>ID</th><th>Name</th>' +
+    '<th>Category</th><th>Limit</th><th style="width:100px">Qty</th><th style="width:80px">Unit</th>' +
+    '<th style="width:70px">Over%</th><th>Notes</th></tr></thead><tbody>' +
+    sorted.map(function(m){
+      return '<tr data-name="' + esc(m.name.toLowerCase()) + '">' +
+        '<td><input type="checkbox" class="pick" data-mat="' + esc(m.name) + '" onchange="toggleRow(this)"></td>' +
+        '<td>' + esc(m.id) + '</td><td><b>' + esc(m.name) + '</b></td>' +
+        '<td><small>' + esc(m.category) + '</small></td>' +
+        '<td><small>' + esc(m.limit) + '</small></td>' +
+        '<td><input type="number" class="qty" step="0.001" disabled></td>' +
+        '<td><select class="unit" disabled>' +
+          ['mg','g','mL','IU','mcg'].map(function(u){return '<option>'+u+'</option>';}).join('') +
+        '</select></td>' +
+        '<td><input type="number" class="ov" value="0" step="0.1" disabled></td>' +
+        '<td><input type="text" class="notes" disabled></td></tr>';
+    }).join('') + '</tbody></table></div>' +
+    '<div class="row" style="margin-top:14px;justify-content:flex-end">' +
+    '<span id="pickCount" class="muted" style="font-size:12.5px"></span>' +
+    '<button class="btn btn-outline" onclick="$(\'pickerSlot\').innerHTML=\'\'">Cancel</button>' +
+    '<button class="btn btn-green" onclick="submitBulk()">Save All Selected</button></div></div>';
+}
+function toggleRow(cb){
+  const row = cb.closest('tr');
+  row.querySelectorAll('input:not(.pick), select').forEach(function(el){ el.disabled = !cb.checked; });
+  updateCount();
+}
+function updateCount(){
+  const picks = document.querySelectorAll('.pick:checked');
+  let ready = 0;
+  picks.forEach(function(cb){
+    const row = cb.closest('tr');
+    if ((parseFloat(row.querySelector('.qty').value)||0) > 0) ready++;
+  });
+  const el = $('pickCount');
+  if (el) el.textContent = picks.length ? ready + ' of ' + picks.length + ' ready' : 'Nothing selected';
+}
+function filterPicker(q){
+  q = (q||'').toLowerCase();
+  document.querySelectorAll('.picker-wrap tbody tr').forEach(function(row){
+    const n = row.getAttribute('data-name') || '';
+    row.style.display = (!q || n.indexOf(q) >= 0) ? '' : 'none';
+  });
+}
+async function submitBulk(){
+  const picks = document.querySelectorAll('.pick:checked');
+  if (!picks.length) return alert('Tick at least one ingredient.');
+  const phase = $('bulkPhase').value;
+  const product = state.products.find(function(p){return p.id === state.activeProduct;});
+  const lines = [];
+  for (let i = 0; i < picks.length; i++) {
+    const cb = picks[i];
+    const row = cb.closest('tr');
+    const qty = parseFloat(row.querySelector('.qty').value)||0;
+    if (!qty) return alert('Missing qty for ' + cb.getAttribute('data-mat'));
+    lines.push({
+      recipeId:'', version:state.activeVersion, productId:product.id, product:product.name,
+      ingredient:cb.getAttribute('data-mat'), phase:phase, unitQty:qty,
+      unit:row.querySelector('.unit').value,
+      overage:parseFloat(row.querySelector('.ov').value)||0,
+      notes:row.querySelector('.notes').value.trim(),
+      date:new Date().toISOString()
+    });
+  }
+  try { setStatus('Saving ' + lines.length + ' line(s)…');
+    await api('saveRecipeBulk', {lines:lines, user:state.currentUser ? state.currentUser.id : ''});
+    $('pickerSlot').innerHTML = '';
+    setStatus('Saved ' + lines.length + ' line(s).');
+    await recalc();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+async function deleteRecipe(rid){
+  if (!confirm('Delete ' + rid + '?')) return;
+  try { await api('deleteRecipe', {recipeId:rid, user:state.currentUser ? state.currentUser.id : ''}); await recalc(); }
+  catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ============ TRIALS ============ */
+function renderTrials(){
+  if (!state.products.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>Add a product first</h3></div></div>'; return; }
+  const product = state.products.find(function(p){return p.id === state.activeProduct;}) || state.products[0];
+  state.activeProduct = product.id;
+  const vs = state.versions.filter(function(v){return v.productId === product.id;});
+  $('view').innerHTML =
+    '<div class="card"><h2>Trial Versions' +
+      '<button class="btn btn-primary btn-sm" onclick="openVersionForm()">+ New Version</button></h2>' +
+      (vs.length === 0 ? '<p class="muted">No versions yet.</p>'
+        : '<table><thead><tr><th>Version</th><th>Stage</th><th>Status</th><th>Failure</th><th>Date</th><th></th></tr></thead><tbody>' +
+          vs.slice().reverse().map(function(v){
+            return '<tr><td><b>' + esc(v.versionId) + '</b></td>' +
+              '<td>' + stagePill(v.stage) + '</td>' +
+              '<td>' + statusPill(v.status) + '</td>' +
+              '<td>' + esc(v.failureCategory||'—') + '</td>' +
+              '<td>' + esc(String(v.date).slice(0,10)) + '</td>' +
+              '<td><button class="btn btn-danger btn-xs" onclick="deleteVersion(\'' + v.versionId + '\')">✕</button></td></tr>';
+          }).join('') + '</tbody></table>') +
+    '</div><div id="panelSlot"></div>';
+}
+function openVersionForm(){
+  const existing = state.versions.filter(function(x){return x.productId === state.activeProduct;});
+  const next = existing.length
+    ? (Math.max.apply(null, existing.map(function(x){return parseFloat(String(x.version).split('.')[1]||0);})) + 1).toFixed(1)
+    : '1.0';
+  const vid = state.activeProduct + '-V' + next;
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>New Trial Version</h3><div class="grid">' +
+    '<div class="field"><label>Version ID</label><input id="vf_id" value="' + esc(vid) + '" readonly></div>' +
+    '<div class="field"><label>Stage</label><select id="vf_stage">' +
+      STAGES.map(function(s){return '<option>'+s+'</option>';}).join('') + '</select></div>' +
+    '<div class="field"><label>Status</label><select id="vf_status" onchange="toggleFail()">' +
+      STATUSES.map(function(s){return '<option>'+s+'</option>';}).join('') + '</select></div>' +
+    '<div class="field"><label>Failure Category</label><select id="vf_cat"><option value="">—</option>' +
+      FAIL_CATS.map(function(c){return '<option>'+c+'</option>';}).join('') + '</select></div>' +
+    '<div class="field" style="grid-column:1/-1"><label>Failure Reason (min 20 on FAIL)</label><textarea id="vf_reason"></textarea></div>' +
+    '<div class="field"><label>Observed</label><input id="vf_obs"></div>' +
+    '<div class="field"><label>Expected</label><input id="vf_exp"></div>' +
+    '<div class="field" style="grid-column:1/-1"><label>CAPA (min 10 on FAIL)</label><textarea id="vf_capa"></textarea></div>' +
+    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
+    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+    '<button class="btn btn-green" onclick="submitVersion()">Save</button></div></div>';
+  toggleFail();
+}
+function toggleFail(){
+  const fail = $('vf_status').value === 'FAIL';
+  ['vf_cat','vf_reason','vf_obs','vf_exp','vf_capa'].forEach(function(id){
+    const el = $(id); if (el) { el.disabled = !fail; el.style.opacity = fail ? '1' : '.5'; }
+  });
+}
+async function submitVersion(){
+  const v = {
+    versionId:$('vf_id').value.trim(), productId:state.activeProduct,
+    version:$('vf_id').value.split('-V')[1] || '1.0',
+    stage:$('vf_stage').value, status:$('vf_status').value,
+    failureCategory:$('vf_cat').value, failureReason:$('vf_reason').value.trim(),
+    observedValue:$('vf_obs').value.trim(), expectedValue:$('vf_exp').value.trim(),
+    correctiveAction:$('vf_capa').value.trim(),
+    loggedBy:state.currentUser ? state.currentUser.id : '',
+    date:new Date().toISOString()
+  };
+  try { setStatus('Saving version…');
+    await api('saveVersion', {version:v, user:state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = ''; await reload();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+async function deleteVersion(vid){
+  if (!confirm('Delete ' + vid + '?')) return;
+  try { await api('deleteVersion', {versionId:vid, user:state.currentUser ? state.currentUser.id : ''}); await reload(); }
+  catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ============ STEPS ============ */
+function renderSteps(){
+  if (!state.versions.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No versions yet</h3></div></div>'; return; }
+  const vid = state.stepsVersion || state.versions[0].versionId;
+  state.stepsVersion = vid;
+  $('view').innerHTML =
+    '<div class="card"><h2>Production Steps' +
+      '<button class="btn btn-primary btn-sm" onclick="openStepForm()">+ Add Step</button></h2>' +
+      '<div class="field" style="margin-bottom:14px;max-width:400px"><label>Version</label>' +
+      '<select onchange="state.stepsVersion=this.value;loadSteps()">' +
+      state.versions.map(function(v){
+        return '<option value="' + v.versionId + '" ' + (v.versionId===vid?'selected':'') + '>' + esc(v.versionId) + '</option>';
+      }).join('') + '</select></div>' +
+      '<div id="stepsList">Loading…</div></div><div id="panelSlot"></div>';
+  loadSteps();
+}
+async function loadSteps(){
+  try {
+    const steps = await api('getSteps', {versionId:state.stepsVersion});
+    state.steps = steps;
+    const el = $('stepsList');
+    if (!steps.length) { el.innerHTML = '<p class="muted">No steps yet.</p>'; return; }
+    el.innerHTML = steps.map(function(s){
+      return '<div style="background:#f0f9f7;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px">' +
+        '<b style="color:var(--brand-dark)">Step ' + s.step + ' — ' + esc(s.stage||'') + '</b>' +
+        '<p style="margin:6px 0">' + esc(s.instruction) + '</p>' +
+        '<button class="btn btn-danger btn-xs" onclick="deleteStep(' + s.step + ')">Delete</button></div>';
+    }).join('');
+  } catch(e){ $('stepsList').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+}
+function openStepForm(){
+  const next = state.steps.length ? Math.max.apply(null, state.steps.map(function(x){return x.step;})) + 1 : 1;
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>New Step</h3><div class="grid">' +
+    '<div class="field"><label>Step #</label><input id="sf_step" type="number" value="' + next + '"></div>' +
+    '<div class="field"><label>Stage</label><input id="sf_stage"></div>' +
+    '<div class="field" style="grid-column:1/-1"><label>Instruction *</label><textarea id="sf_inst" style="min-height:80px"></textarea></div>' +
+    '<div class="field"><label>Equipment</label><input id="sf_eq"></div>' +
+    '<div class="field"><label>Target</label><input id="sf_target"></div>' +
+    '<div class="field"><label>IPC</label><input id="sf_ipc"></div>' +
+    '<div class="field"><label>Duration</label><input id="sf_dur"></div>' +
+    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
+    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+    '<button class="btn btn-green" onclick="submitStep()">Save</button></div></div>';
+}
+async function submitStep(){
+  const s = { versionId:state.stepsVersion,
+    step:parseInt($('sf_step').value,10)||1, stage:$('sf_stage').value.trim(),
+    instruction:$('sf_inst').value.trim(), equipment:$('sf_eq').value.trim(),
+    target:$('sf_target').value.trim(), ipc:$('sf_ipc').value.trim(),
+    duration:$('sf_dur').value.trim() };
+  try { await api('saveStep', {step:s, user:state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = ''; loadSteps();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+async function deleteStep(step){
+  if (!confirm('Delete step ' + step + '?')) return;
+  try { await api('deleteStep', {versionId:state.stepsVersion, step:step, user:state.currentUser ? state.currentUser.id : ''}); loadSteps(); }
+  catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ============ BMR ============ */
+function renderBmr(){
+  if (!state.versions.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No versions yet</h3></div></div>'; return; }
+  const vid = state.stepsVersion || state.versions[0].versionId;
+  state.stepsVersion = vid;
+  $('view').innerHTML =
+    '<div class="card"><h2>BMR Compose</h2><div class="grid">' +
+    '<div class="field"><label>Version</label><select onchange="state.stepsVersion=this.value;loadBmr()">' +
+      state.versions.map(function(v){
+        return '<option value="' + v.versionId + '" ' + (v.versionId===vid?'selected':'') + '>' + esc(v.versionId) + '</option>';
+      }).join('') + '</select></div>' +
+    '<div class="field"><label>Batch No</label><input id="b_batch" value="B-XXX-0000-01"></div>' +
+    '<div class="field"><label>Batch Volume</label><input id="b_vol" type="number" value="' + state.batchVolume + '"></div>' +
+    '</div><div class="row" style="margin-top:14px">' +
+    '<button class="btn btn-primary" onclick="loadBmr()">Generate</button>' +
+    '<button class="btn btn-outline" onclick="window.print()">🖨 Print</button>' +
+    '</div></div><div id="bmrOut">Loading…</div>';
+  loadBmr();
+}
+async function loadBmr(){
+  const vid = state.stepsVersion;
+  const productId = vid.split('-V')[0];
+  const vol = parseFloat(($('b_vol')||{}).value) || 1000;
+  try {
+    const p = await api('getBmrPayload', {productId:productId, versionId:vid, batchVolume:vol});
+    paintBmr(p, vid);
+  } catch(e){ $('bmrOut').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+}
+function paintBmr(p, vid){
+  const c = p.calc;
+  const vm = p.versionMeta || {};
+  $('bmrOut').innerHTML =
+    '<div class="card">' +
+    '<div style="text-align:center;padding-bottom:14px;border-bottom:2px solid var(--brand);margin-bottom:16px">' +
+    '<b style="font-size:16px">AFRAB CHEM LIMITED</b><br>' +
+    '<small class="muted">BATCH MANUFACTURING RECORD</small></div>' +
+    '<div class="grid"><div class="field"><label>Doc Ref</label><input value="' + esc(p.docRef) + '" readonly></div>' +
+    '<div class="field"><label>Version</label><input value="' + esc(vid) + '" readonly></div>' +
+    '<div class="field"><label>Stage</label><input value="' + esc(vm.stage||'—') + '" readonly></div>' +
+    '<div class="field"><label>Status</label><input value="' + esc(vm.status||'—') + '" readonly></div></div>' +
+    '<table style="margin-top:14px"><thead><tr><th>Item #</th><th>Ingredient</th><th>Phase</th>' +
+    '<th>Unit Dose</th><th>% w/w</th><th>Batch (kg)</th></tr></thead><tbody>' +
+    c.lines.map(function(l){
+      return '<tr><td>' + esc(l.recipeId) + '</td><td><b>' + esc(l.ingredient) + '</b></td>' +
+        '<td><small>' + esc(l.phase) + '</small></td>' +
+        '<td>' + l.unitQty + ' ' + esc(l.unit) + '</td>' +
+        '<td>' + l.pct + '%</td><td>' + l.batchKg + '</td></tr>';
+    }).join('') +
+    '<tr class="total-row"><td colspan="4">TOTAL</td><td>' + c.totalPct + '%</td>' +
+    '<td>' + c.lines.reduce(function(s,l){return s+l.batchKg;},0).toFixed(3) + '</td></tr>' +
+    '</tbody></table></div>';
+}
+
+/* ============ ARCHIVE ============ */
+async function renderArchive(){
+  $('view').innerHTML = '<div class="card"><h2>BMR Archive</h2><div id="archTable">Loading…</div></div>';
+  try {
+    const rows = await api('getArchive');
+    if (!rows.length) { $('archTable').innerHTML = '<p class="muted">No BMRs yet.</p>'; return; }
+    $('archTable').innerHTML =
+      '<table><thead><tr><th>Doc Ref</th><th>Version</th><th>Product</th><th>Batch No</th>' +
+      '<th>Issued</th><th>Disposition</th></tr></thead><tbody>' +
+      rows.slice().reverse().map(function(r){
+        return '<tr><td>' + esc(r.docRef) + '</td><td>' + esc(r.versionId) + '</td>' +
+          '<td>' + esc(r.productId) + '</td><td>' + esc(r.batchNo) + '</td>' +
+          '<td>' + esc(String(r.issuedAt).slice(0,19)) + '</td>' +
+          '<td>' + statusPill(r.disposition) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  } catch(e){ $('archTable').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+}
+
+/* ============ RELOAD ============ */
+async function reload(){
+  try {
+    const d = await api('getAppData');
+    state.users = d.users || [];
+    state.materials = d.materials || [];
+    state.products = d.products || [];
+    state.versions = d.versions || [];
+    state.recipes = d.recipes || [];
+    state.trends = d.trends || {};
+    state.stages = d.stages || {};
+    render();
+  } catch(e){ setStatus('Reload failed: ' + e.message, true); }
+}
+
+boot();
+</script>
 </body>
 </html>
