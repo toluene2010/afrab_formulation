@@ -513,7 +513,7 @@ function paintCalc(c){
       '<tr><td colspan="13" class="mut" style="text-align:center;padding:20px">No ingredients yet. Click <b>+ Add Ingredients</b>.</td></tr>':
       c.lines.map(l=>`<tr>
         <td style="font-family:monospace">${esc(l.recipeId)}</td>
-        <td><b>${esc(l.ingredient)}</b></td>
+        <td><b>${esc(l.ingredient)}</b>${l.isAutoQs ? ' <span style="color:#7a8a88;font-size:11px">(q.s. — auto)</span>' : ''}</td>
         <td><small>${esc(l.phase)}</small></td>
         <td><small>${esc(l.matCategory)}</small></td>
         <td>${l.unitQty} ${esc(l.unit)}</td>
