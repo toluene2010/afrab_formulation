@@ -3,152 +3,247 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AFRAB Formulation Studio</title>
+<title>Formulation Pilot Workbench &amp; History Log</title>
 <style>
 :root{
-  --brand:#0d5751;--brand-dark:#083b37;--brand-light:#e6f4f1;
-  --bg:#f4f6f8;--line:#d7dee5;--ink:#1a2027;--muted:#6b7280;
-  --ok:#0f7b4f;--ok-bg:#d9f3e1;
-  --warn:#b00020;--warn-bg:#fde5e9;
-  --amber:#8a5a00;--amber-bg:#fdf3dc;
+  --teal:#0d5751;--teal-dark:#083b37;--teal-light:#e6f4f1;--teal-soft:#f0f9f7;
+  --ink:#1a2b2a;--ink-soft:#4a5c5a;--muted:#7a8a88;--line:#d6e2e0;
+  --bg:#f5f8f7;--white:#fff;
+  --green:#0f7b4f;--green-hover:#0b6240;
+  --amber:#a86a00;--amber-bg:#fdf3dc;
+  --red:#b00020;--red-bg:#fde5e9;
+  --purple:#6b46c1;--purple-bg:#ede7f6;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+body{font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
      background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
-header{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-dark) 100%);
-       color:#fff;padding:16px 24px;display:flex;justify-content:space-between;
-       align-items:center;flex-wrap:wrap;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
-header h1{font-size:18px;letter-spacing:.3px}
-header small{opacity:.85;display:block;font-size:12px}
-.user-badge{font-size:12px;text-align:right;opacity:.9}
-nav{background:#fff;border-bottom:1px solid var(--line);padding:0 24px;
-    display:flex;gap:2px;overflow-x:auto;position:sticky;top:0;z-index:10}
-nav button{background:none;border:none;padding:13px 16px;cursor:pointer;
-           font:inherit;color:#555;border-bottom:3px solid transparent;
-           white-space:nowrap;font-weight:500}
-nav button.active{color:var(--brand);border-color:var(--brand);font-weight:600}
-nav button:hover{background:#f5f8fb}
-main{padding:20px 24px 60px;max-width:1500px;margin:0 auto}
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;
-      padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-.card h2{font-size:13px;margin:0 0 16px;color:var(--brand-dark);
-         text-transform:uppercase;letter-spacing:1px;
-         border-bottom:2px solid var(--brand);padding-bottom:8px;
-         display:flex;justify-content:space-between;align-items:center;
-         flex-wrap:wrap;gap:8px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px 24px}
-.field{display:flex;flex-direction:column;gap:5px}
-.field label{font-size:11px;color:var(--muted);font-weight:600;
-             text-transform:uppercase;letter-spacing:.4px}
-.field input,.field select,.field textarea{
-  font:inherit;padding:8px 11px;border:1px solid var(--line);
-  border-radius:6px;background:#fff;color:var(--ink);width:100%}
-.field input:focus,.field select:focus,.field textarea:focus{
-  outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(13,87,81,.12)}
-.field textarea{resize:vertical;min-height:60px;font-family:inherit}
-.btn{padding:9px 16px;border-radius:8px;font:inherit;font-weight:600;
-     border:1px solid transparent;cursor:pointer;display:inline-flex;
-     align-items:center;gap:7px;transition:all .12s;white-space:nowrap;font-size:13px}
-.btn-primary{background:var(--brand);color:#fff}
-.btn-primary:hover{background:var(--brand-dark)}
-.btn-green{background:var(--ok);color:#fff}
-.btn-green:hover{background:#0b6240}
+.topbar{background:#fff;border-bottom:1px solid var(--line);padding:12px 24px;
+        display:flex;align-items:center;justify-content:space-between;
+        position:sticky;top:0;z-index:50}
+.topbar .left{display:flex;align-items:center;gap:10px;font-weight:600;
+              color:var(--teal-dark);font-size:14px}
+.topbar .right{display:flex;gap:10px;align-items:center;font-size:12px;
+               color:var(--muted)}
+.hero{background:linear-gradient(135deg,#e9f5f2 0%,#f4faf9 100%);
+      padding:24px;border-bottom:1px solid var(--line)}
+.hero-inner{max-width:1500px;margin:0 auto;display:flex;
+            align-items:flex-start;gap:20px;flex-wrap:wrap}
+.hero-icon{width:52px;height:52px;border-radius:12px;background:var(--teal);
+           display:flex;align-items:center;justify-content:center;
+           color:#fff;flex-shrink:0;font-size:24px;font-weight:700}
+.hero-text{flex:1;min-width:240px}
+.hero-text h1{font-size:22px;color:var(--teal-dark);font-weight:700;
+              line-height:1.25;margin-bottom:4px}
+.hero-text p{font-size:13px;color:var(--ink-soft)}
+.hero-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.hero-pill{background:#fff;border:1px solid var(--line);padding:5px 12px;
+           border-radius:20px;font-size:12px;color:var(--teal-dark);font-weight:500}
+.hero-pill.teal{background:var(--teal-light);border-color:#c3ddd8}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;
+     border-radius:8px;font-size:13px;font-weight:600;border:1px solid transparent;
+     cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap}
+.btn-primary{background:var(--teal);color:#fff}
+.btn-primary:hover{background:var(--teal-dark)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-hover)}
 .btn-outline{background:#fff;color:var(--ink);border-color:var(--line)}
-.btn-outline:hover{background:var(--brand-light);border-color:#c3ddd8}
-.btn-danger{background:#fff;color:var(--warn);border-color:var(--warn)}
+.btn-outline:hover{background:var(--teal-soft);border-color:#c3ddd8}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:#563a9f}
+.btn-ghost{background:transparent;color:var(--ink-soft);border-color:transparent}
+.btn-ghost:hover{background:var(--teal-soft)}
+.btn-danger{background:#fff;color:var(--red);border-color:var(--red)}
 .btn-sm{padding:5px 11px;font-size:12px}
 .btn-xs{padding:3px 8px;font-size:11px}
-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
-th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
-th{background:#eef3f7;color:var(--brand-dark);font-size:11px;font-weight:700;
-   text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--line)}
-tbody tr:hover{background:#fafcfe}
-tr.total-row td{background:#f1f7fb;font-weight:700;color:var(--brand-dark)}
+.container{max-width:1500px;margin:0 auto;padding:20px 24px 60px}
+.stage-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+             gap:14px;margin-bottom:22px}
+.stage-tile{background:#fff;border:1px solid var(--line);border-radius:12px;
+            padding:16px 18px;position:relative;transition:box-shadow .15s}
+.stage-tile:hover{box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.stage-tile .badge{display:inline-block;padding:3px 9px;border-radius:6px;
+                   font-size:10.5px;font-weight:700;text-transform:uppercase;
+                   letter-spacing:.6px;margin-bottom:10px}
+.stage-tile.lab .badge{background:#e8eef6;color:#2c5b8a}
+.stage-tile.stb .badge{background:#ece7f8;color:#5f3cb8}
+.stage-tile.plt .badge{background:#e6f4e8;color:#1c6b3a}
+.stage-tile.com .badge{background:#fdf3dc;color:#8a5200}
+.stage-tile .num{position:absolute;top:16px;right:18px;font-size:28px;
+                 font-weight:700;color:var(--teal-dark);line-height:1}
+.stage-tile .title{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.stage-tile .sub{font-size:11.5px;color:var(--muted)}
+.nav-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.nav-pill{background:#fff;border:1px solid var(--line);color:var(--ink-soft);
+          padding:8px 16px;border-radius:20px;cursor:pointer;font-size:13px;
+          font-weight:600;font-family:inherit;transition:all .12s;
+          display:inline-flex;align-items:center;gap:7px}
+.nav-pill:hover{border-color:#c3ddd8;background:var(--teal-soft)}
+.nav-pill.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.bmr-card{background:#fff;border:1px solid var(--line);border-radius:14px;
+          padding:22px 24px;margin-bottom:20px;
+          box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.bmr-card .top{display:flex;justify-content:space-between;align-items:flex-start;
+               flex-wrap:wrap;gap:14px;padding-bottom:16px;
+               border-bottom:1px solid var(--line);margin-bottom:18px}
+.bmr-card .top .left{flex:1;min-width:280px}
+.bmr-card .top .right{display:flex;gap:8px;flex-wrap:wrap}
+.bmr-card .eyebrow{font-size:11px;color:var(--muted);text-transform:uppercase;
+                   letter-spacing:1px;font-weight:700;margin-bottom:6px}
+.bmr-card h2{font-size:19px;color:var(--teal-dark);font-weight:700;
+             font-family:"Courier New",monospace;letter-spacing:.5px;margin-bottom:8px}
+.bmr-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.meta-chip{background:var(--teal-light);color:var(--teal-dark);padding:4px 11px;
+           border-radius:16px;font-size:11.5px;font-weight:600}
+.meta-chip.outline{background:#fff;border:1px solid var(--line);
+                   color:var(--ink-soft);font-weight:500}
+.engine-head{display:flex;justify-content:space-between;align-items:center;
+             flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.engine-head h3{font-size:14px;color:var(--teal-dark);font-weight:700;
+                display:flex;align-items:center;gap:8px}
+.engine-head p{font-size:12.5px;color:var(--muted);margin-top:2px}
+.engine-actions{display:flex;gap:8px;flex-wrap:wrap}
+.form-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.form-chip{background:#fff;border:2px solid var(--line);border-radius:10px;
+           padding:12px 14px;cursor:pointer;text-align:left;
+           transition:all .15s;font-family:inherit}
+.form-chip:hover{border-color:#c3ddd8;background:var(--teal-soft)}
+.form-chip.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.form-chip.active .chip-sub{color:rgba(255,255,255,.85)}
+.form-chip .chip-title{font-size:12.5px;font-weight:700;text-transform:uppercase;
+                       letter-spacing:.5px;color:var(--teal-dark)}
+.form-chip.active .chip-title{color:#fff}
+.form-chip .chip-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.field-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+           gap:14px;margin-bottom:16px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:var(--muted);text-transform:uppercase;
+             letter-spacing:.6px;font-weight:700}
+.field input,.field select,.field textarea{font-family:inherit;font-size:13.5px;
+  padding:9px 12px;border:1px solid var(--line);border-radius:8px;
+  background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(13,87,81,.12)}
+.field textarea{resize:vertical;min-height:60px}
+.field input:disabled,.field select:disabled{background:#f4f6f5;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 11px;text-align:left;vertical-align:top;
+      border-bottom:1px solid var(--line)}
+th{background:var(--teal-soft);color:var(--teal-dark);font-size:11px;
+   font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+   border-bottom:2px solid var(--line)}
+tbody tr:hover{background:#fafcfb}
+tr.total-row td{background:var(--teal-light);font-weight:700;
+                color:var(--teal-dark);border-top:2px solid var(--teal)}
 .pill{display:inline-block;padding:3px 10px;border-radius:14px;font-size:11px;
-      font-weight:700;white-space:nowrap;text-transform:uppercase}
-.pill-ok{background:var(--ok-bg);color:var(--ok)}
-.pill-fail{background:var(--warn-bg);color:var(--warn)}
-.pill-warn{background:var(--amber-bg);color:var(--amber)}
-.pill-stage{background:var(--brand-light);color:var(--brand-dark)}
-.status{color:var(--muted);padding:8px 0;font-size:13px}
-.status.error{color:var(--warn);font-weight:600}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-          gap:14px;margin-bottom:22px}
-.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
-.kpi .n{font-size:26px;color:var(--brand-dark);font-weight:700;line-height:1.1}
-.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;
-        letter-spacing:.6px;font-weight:700;margin-top:4px}
+      font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.3px}
+.pill-ok,.pill-pass,.pill-released,.pill-approved{background:#dff2e5;color:#146c3e}
+.pill-fail,.pill-rejected{background:var(--red-bg);color:var(--red)}
+.pill-warn,.pill-pending,.pill-quarantine{background:var(--amber-bg);color:var(--amber)}
+.pill-rework{background:var(--purple-bg);color:var(--purple)}
+.pill-stage{background:var(--teal-light);color:var(--teal-dark)}
 .callout{border-radius:10px;padding:12px 16px;font-size:13px;
          margin-bottom:14px;border-left:4px solid}
-.callout.info{background:var(--brand-light);border-color:var(--brand);color:var(--brand-dark)}
+.callout.info{background:var(--teal-light);border-color:var(--teal);color:var(--teal-dark)}
 .callout.warn{background:var(--amber-bg);border-color:var(--amber);color:#5c3d00}
-.callout.fail{background:var(--warn-bg);border-color:var(--warn);color:#6b0010}
-.empty-state{padding:40px 20px;text-align:center;color:var(--muted);
+.callout.fail{background:var(--red-bg);border-color:var(--red);color:#6b0010}
+.status-strip{font-size:13px;color:var(--muted);padding:10px 4px;min-height:20px}
+.status-strip.error{color:var(--red);font-weight:600}
+.empty-state{padding:50px 24px;text-align:center;color:var(--muted);
              background:#fff;border:1px dashed var(--line);border-radius:14px}
-.empty-state h3{color:var(--brand-dark);font-size:16px;margin-bottom:8px}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.muted{color:var(--muted)}
+.empty-state h3{color:var(--teal-dark);font-size:16px;margin-bottom:8px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;
+       padding:22px 24px;margin-top:20px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+.panel h3{font-size:15px;color:var(--teal-dark);margin-bottom:16px;font-weight:700}
 .picker-wrap{max-height:520px;overflow-y:auto;border:1px solid var(--line);
              border-radius:10px;background:#fff}
-.picker-wrap th{position:sticky;top:0;z-index:2}
+.picker-wrap table{margin:0}
+.picker-wrap th{position:sticky;top:0;z-index:2;background:var(--teal-soft)}
 .picker-wrap input[type=number],.picker-wrap input[type=text]{
   padding:5px 8px;font-size:12.5px;width:100%;border:1px solid var(--line);
   border-radius:6px;font-family:inherit}
 .picker-wrap select{padding:5px 6px;font-size:12.5px;border:1px solid var(--line);
                     border-radius:6px;background:#fff}
-.picker-wrap input:disabled,.picker-wrap select:disabled{background:#f6f8f8;color:#b0bcbb}
-.panel{background:#fff;border:1px solid var(--line);border-radius:14px;
-       padding:22px 24px;margin-top:20px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
-.panel h3{font-size:15px;color:var(--brand-dark);margin-bottom:16px;font-weight:700}
+.picker-wrap input:disabled,.picker-wrap select:disabled{
+  background:#f6f8f8;color:#b0bcbb}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row-between{display:flex;justify-content:space-between;align-items:center;
+             gap:12px;flex-wrap:wrap}
+.muted{color:var(--muted)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+          gap:14px;margin-bottom:22px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+.kpi .n{font-size:26px;color:var(--teal-dark);font-weight:700;
+        line-height:1.1;margin-bottom:2px}
+.kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;
+        letter-spacing:.6px;font-weight:700}
+.bar{height:22px;background:#eef3f2;border-radius:6px;overflow:hidden;
+     position:relative;margin-top:4px}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--red),#d14860);
+         border-radius:6px;transition:width .4s}
+.bar span{position:absolute;top:0;left:10px;line-height:22px;font-size:11.5px;
+          color:#fff;font-weight:700}
 @media print{
-  header,nav,.btn,.status{display:none!important}
+  .topbar,.hero-actions,.nav-row,.engine-head,.engine-actions,.btn,
+  .status-strip,.stage-tiles,.form-chips{display:none!important}
   body{background:#fff;font-size:11px}
-  main{padding:0;max-width:100%}
-  .card{box-shadow:none;border-color:#999;padding:14px;margin-bottom:12px}
-  table{font-size:10.5px}th,td{padding:5px 7px}
+  .hero{background:#fff;padding:12px 0}
+  .container{padding:0;max-width:100%}
+  .bmr-card{box-shadow:none;border:none;padding:0;border-radius:0}
+  table{font-size:10px}th,td{padding:5px 7px}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>AFRAB Formulation Studio</h1>
-    <small>Trial Monitoring &amp; BMR Tracking System</small>
+<div class="topbar">
+  <div class="left">Formulation Pilot Workbench and History Log</div>
+  <div class="right"><span id="userBadge">Loading…</span></div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-icon">⚗</div>
+    <div class="hero-text">
+      <h1>Trial Monitoring &amp; BMR Tracking System</h1>
+      <p>Comprehensive formulation engine for Tablets, Capsules, Liquid Orals,
+         Syrups, Suspensions, Semi-Solids &amp; Dry Drops.</p>
+      <div class="hero-pills">
+        <span class="hero-pill teal">All Dosage Forms • ICH GMP</span>
+        <span class="hero-pill" id="pillProducts">Product Master (0)</span>
+        <span class="hero-pill" id="pillVersions">BMR Trials Log (0)</span>
+        <span class="hero-pill" id="pillStages">Stage Pipeline (0)</span>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-green" onclick="window.print()">⬇ Download PDF</button>
+      <button class="btn btn-outline" onclick="window.print()">🖨 Print / Preview</button>
+    </div>
   </div>
-  <small id="userBadge" class="user-badge">Loading…</small>
-</header>
+</div>
 
-<nav id="nav">
-  <button data-tab="dashboard">Dashboard</button>
-  <button data-tab="materials">Raw Materials</button>
-  <button data-tab="products">Products</button>
-  <button data-tab="formulation" class="active">Formulation</button>
-  <button data-tab="trials">Trials</button>
-  <button data-tab="steps">Steps</button>
-  <button data-tab="bmr">BMR</button>
-  <button data-tab="archive">Archive</button>
-</nav>
-
-<main>
-  <div id="status" class="status">Booting…</div>
+<div class="container">
+  <div id="status" class="status-strip">Loading…</div>
   <div id="view"></div>
-</main>
+</div>
 
 <script>
+/* ================================================================
+   CONFIG
+   ================================================================ */
 const API_URL  = 'https://script.google.com/macros/s/AKfycbxptzrN30F71GJ-ZqHpo6wL9WdnHLH2eVBNlknreDod_yY3Yk9srIWqz2ySBW98XrB6/exec';
 const API_TOKEN = 'afrab-secret-2026-change-me';
 const CURRENCY = '₦';
-const $ = id => document.getElementById(id);
 
 const DOSAGE_FORMS = [
-  {name:'Tablet / Caplet', short:'TABLET'},
-  {name:'Capsule', short:'CAPSULE'},
-  {name:'Oral Liquid / Syrup', short:'SYRUP'},
-  {name:'Suspension / Emulsion', short:'SUSPENSION'},
-  {name:'Cream / Ointment / Gel', short:'SEMI_SOLID'},
-  {name:'Dry Powder / Sachet / Drops', short:'DRY_POWDER'},
-  {name:'Injection / Sterile', short:'INJECTION'}
+  { name:'Tablet / Caplet', short:'TABLET', sub:'Tablet' },
+  { name:'Capsule', short:'CAPSULE', sub:'Capsule / Softgel' },
+  { name:'Oral Liquid / Syrup', short:'SYRUP', sub:'Syrup / Elixir / Solution' },
+  { name:'Suspension / Emulsion', short:'SUSPENSION', sub:'Suspension / Emulsion' },
+  { name:'Cream / Ointment / Gel', short:'SEMI_SOLID', sub:'Cream / Ointment / Gel / Paste' },
+  { name:'Dry Powder / Sachet / Drops', short:'DRY_POWDER', sub:'Reconstitutable Dry Powder' },
+  { name:'Injection / Sterile', short:'INJECTION', sub:'Injection / Sterile' }
 ];
 const STAGES = ['Lab Bench','Pilot Scale','Stability','Commercial'];
 const STATUSES = ['PASS','FAIL','ON HOLD','IN PROGRESS'];
@@ -158,35 +253,71 @@ const FAIL_CATS = ['Phase Separation','Assay OOS','Dissolution Fail','pH Out of 
 const PRODUCT_STATUSES = ['Pilot Trial / Formulation','Pilot Batch Trial',
   'Stability Testing','Commercial / Active','On Hold','Discontinued'];
 
+/* ================================================================
+   STATE
+   ================================================================ */
+const $ = id => document.getElementById(id);
 const state = {
   users:[], materials:[], products:[], versions:[], recipes:[],
-  trends:{}, stages:{}, currentUser:null, tab:'formulation',
+  trends:{}, stages:{}, currentUser:null,
+  tab:'bmr',
   activeProduct:'', activeVersion:'', batchVolume:1000,
-  calc:null, steps:[], stepsVersion:'', matFilter:''
+  calc:null, steps:[], stepsVersion:'', editingRecipe:null, matFilter:''
 };
 
+/* ================================================================
+   HELPERS
+   ================================================================ */
 function esc(s){ return String(s ?? '').replace(/[&<>"']/g, c =>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function money(n){ if(n==null || isNaN(n)) return '—';
   return CURRENCY + Number(n).toLocaleString(undefined,
     {minimumFractionDigits:2, maximumFractionDigits:2}); }
 function statusPill(s){ s=s||'';
-  if (/pass|approv|releas|conform/i.test(s)) return '<span class="pill pill-ok">'+esc(s)+'</span>';
+  if (/pass|approv|releas|conform/i.test(s)) return '<span class="pill pill-pass">'+esc(s)+'</span>';
   if (/fail|reject|discontinu/i.test(s)) return '<span class="pill pill-fail">'+esc(s)+'</span>';
+  if (/quarantine/i.test(s)) return '<span class="pill pill-quarantine">'+esc(s)+'</span>';
+  if (/rework/i.test(s)) return '<span class="pill pill-rework">'+esc(s)+'</span>';
   return '<span class="pill pill-warn">'+esc(s)+'</span>'; }
 function stagePill(s){ s=s||'';
-  if (/commercial/i.test(s)) return '<span class="pill pill-ok">'+esc(s)+'</span>';
+  if (/commercial/i.test(s)) return '<span class="pill pill-pass">'+esc(s)+'</span>';
   return '<span class="pill pill-stage">'+esc(s)+'</span>'; }
 function setStatus(msg, isErr){
   const el=$('status'); if(!el) return;
   el.textContent = msg || '';
   el.classList.toggle('error', !!isErr); }
+function detectForm(formName){
+  const f = String(formName||'').toLowerCase();
+  for (const d of DOSAGE_FORMS) {
+    const key = d.short.toLowerCase();
+    if (key === 'tablet' && /tablet|caplet/.test(f)) return d;
+    if (key === 'capsule' && /capsule/.test(f)) return d;
+    if (key === 'syrup' && /syrup|elixir|solution|liquid/.test(f)) return d;
+    if (key === 'suspension' && /suspension|emulsion/.test(f)) return d;
+    if (key === 'semi_solid' && /cream|ointment|gel|paste|semi/.test(f)) return d;
+    if (key === 'dry_powder' && /powder|sachet|drop/.test(f)) return d;
+    if (key === 'injection' && /inject|vial|ampoule/.test(f)) return d;
+  }
+  return DOSAGE_FORMS[0];
+}
+function docRef(productId){
+  const vs = state.versions.filter(v => v.productId === productId);
+  const count = vs.length || 1;
+  const stage = state.bmrStageFilter || 'pilot';
+  const code = stage === 'commercial' ? 'COM' : stage === 'stability' ? 'STB'
+             : stage === 'lab' ? 'LAB' : 'PLT';
+  return 'BMR-' + code + '-' + productId.replace('PRD-','PRD') + '-' +
+         String(count).padStart(2,'0');
+}
 
-async function api(action, payload) {
+/* ================================================================
+   API
+   ================================================================ */
+async function api(action, payload){
   const body = { action: action, token: API_TOKEN, payload: payload || {} };
   const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    method:'POST',
+    headers:{ 'Content-Type':'text/plain;charset=utf-8' },
     body: JSON.stringify(body)
   });
   const json = await res.json();
@@ -194,15 +325,72 @@ async function api(action, payload) {
   return json.data;
 }
 
-$('nav').addEventListener('click', function(e){
-  const btn = e.target.closest('button[data-tab]');
+/* ================================================================
+   NAV
+   ================================================================ */
+document.addEventListener('click', function(e){
+  const btn = e.target.closest && e.target.closest('button[data-action]');
   if (!btn) return;
-  document.querySelectorAll('#nav button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.tab = btn.dataset.tab;
-  render();
-});
+  const action = btn.getAttribute('data-action');
+  const payloadRaw = btn.getAttribute('data-payload');
+  let payload = null;
+  if (payloadRaw) { try { payload = JSON.parse(payloadRaw); } catch(err){} }
+  const fn = ACTIONS[action];
+  if (typeof fn === 'function') {
+    e.preventDefault(); e.stopPropagation();
+    try { fn(payload, btn); }
+    catch(err){ setStatus('Action error ('+action+'): '+err.message, true); }
+  }
+}, true);
 
+const ACTIONS = {
+  goDashboard: () => { state.tab='dashboard'; render(); },
+  goCompose:   () => { state.tab='bmr';       render(); },
+  goPipeline:  () => { state.tab='pipeline';  render(); },
+  goTrials:    () => { state.tab='trials';    render(); },
+  goProducts:  () => { state.tab='products';  render(); },
+  goMaterials: () => { state.tab='materials'; render(); },
+  goSteps:     () => { state.tab='steps';     render(); },
+  goArchive:   () => { state.tab='archive';   render(); },
+  goSetup:     () => { state.tab='setup';     render(); },
+
+  newMaterial:  () => openMaterialForm(),
+  editMaterial: (p) => openMaterialForm(p.material),
+  saveMaterial: () => submitMaterial(),
+
+  newProduct:   () => openProductForm(),
+  editProduct:  (p) => openProductForm(p.product),
+  saveProduct:  () => submitProduct(),
+
+  openPicker:   () => openPicker(),
+  saveBulk:     () => submitBulk(),
+  deleteRecipe: (p) => deleteRecipe(p.recipeId),
+
+  newVersion:   () => openVersionForm(),
+  saveVersion:  () => submitVersion(),
+  deleteVersion:(p) => deleteVersion(p.versionId),
+  goStepsFor:   (p) => { state.stepsVersion = p.versionId; state.tab='steps'; render(); },
+
+  addStep:      () => openStepForm(),
+  saveStep:     () => submitStep(),
+  deleteStep:   (p) => deleteStep(p.step),
+
+  changeDosageForm:(p) => changeDosageForm(p.form),
+
+  loadTemplate: () => loadTemplate(),
+  aiAssistant:  () => aiAssistant(),
+  resetForm:    () => resetForm(),
+
+  openIssue:    () => openIssueForm(),
+  submitIssue:  () => submitIssue(),
+
+  reload:       () => reload()
+};
+window.ACTIONS = ACTIONS;
+
+/* ================================================================
+   BOOT
+   ================================================================ */
 async function boot(){
   try {
     setStatus('Loading…');
@@ -217,277 +405,360 @@ async function boot(){
     state.currentUser = state.users[0] || null;
     $('userBadge').textContent = state.currentUser
       ? state.currentUser.name + ' — ' + (state.currentUser.role || '')
-      : 'No users';
+      : 'No users yet';
     if (state.products.length) {
       state.activeProduct = state.products[0].id;
       state.activeVersion = state.activeProduct + '-V1.0';
     }
-    setStatus(state.products.length + ' products • ' +
-              state.materials.length + ' materials • ' +
-              state.versions.length + ' versions');
+    updateHeroPills();
     render();
-  } catch (e) {
+  } catch(e){
     setStatus('Failed to load: ' + e.message, true);
   }
 }
+function updateHeroPills(){
+  $('pillProducts').textContent = 'Product Master (' + state.products.length + ')';
+  $('pillVersions').textContent = 'BMR Trials Log (' + state.versions.length + ')';
+  const sc = Object.values(state.stages||{}).reduce((s,v)=>s+v,0);
+  $('pillStages').textContent = 'Stage Pipeline (' + sc + ')';
+}
 
+/* ================================================================
+   ROUTER
+   ================================================================ */
 function render(){
   setStatus('');
+  updateHeroPills();
   switch (state.tab) {
-    case 'dashboard':   return renderDashboard();
-    case 'materials':   return renderMaterials();
-    case 'products':    return renderProducts();
-    case 'formulation': return renderFormulation();
-    case 'trials':      return renderTrials();
-    case 'steps':       return renderSteps();
-    case 'bmr':         return renderBmr();
-    case 'archive':     return renderArchive();
+    case 'dashboard': return renderDashboard();
+    case 'bmr':       return renderCompose();
+    case 'pipeline':  return renderPipeline();
+    case 'trials':    return renderTrials();
+    case 'products':  return renderProducts();
+    case 'materials': return renderMaterials();
+    case 'steps':     return renderSteps();
+    case 'archive':   return renderArchive();
+    case 'setup':     return renderSetup();
   }
 }
 
-/* ============ DASHBOARD ============ */
+function navRow(active){
+  const items = [
+    { id:'bmr',       label:'BMR Tracking & Compose', action:'goCompose' },
+    { id:'pipeline',  label:'Stage Pipeline',          action:'goPipeline' },
+    { id:'trials',    label:'BMR Trials Log',          action:'goTrials' },
+    { id:'products',  label:'Product Master',          action:'goProducts' },
+    { id:'materials', label:'Raw Materials',           action:'goMaterials' },
+    { id:'dashboard', label:'Dashboard',               action:'goDashboard' },
+    { id:'steps',     label:'Production Steps',        action:'goSteps' },
+    { id:'archive',   label:'BMR Archive',             action:'goArchive' },
+    { id:'setup',     label:'Setup',                   action:'goSetup' }
+  ];
+  return '<div class="nav-row">' + items.map(function(it){
+    return '<button class="nav-pill ' + (active===it.id?'active':'') +
+           '" data-action="' + it.action + '">' + esc(it.label) + '</button>';
+  }).join('') + '</div>';
+}
+
+/* ================================================================
+   DASHBOARD
+   ================================================================ */
 function renderDashboard(){
   const t = state.trends || {total:0,passed:0,failed:0,byCategory:{}};
   const s = state.stages || {lab:0,stability:0,pilot:0,commercial:0};
-  const total = Object.values(t.byCategory).reduce(function(a,b){return a+b;},0) || 1;
+  const total = Object.values(t.byCategory||{}).reduce(function(a,b){return a+b;},0) || 1;
   $('view').innerHTML =
+    navRow('dashboard') +
+    stageTiles(s) +
     '<div class="kpi-grid">' +
       '<div class="kpi"><div class="n">' + state.products.length + '</div><div class="l">Products</div></div>' +
-      '<div class="kpi"><div class="n">' + state.materials.length + '</div><div class="l">Materials</div></div>' +
-      '<div class="kpi"><div class="n">' + (t.total||0) + '</div><div class="l">Versions</div></div>' +
+      '<div class="kpi"><div class="n">' + state.materials.length + '</div><div class="l">Raw Materials</div></div>' +
+      '<div class="kpi"><div class="n">' + (t.total||0) + '</div><div class="l">Trial Versions</div></div>' +
       '<div class="kpi"><div class="n">' + (t.passed||0) + '</div><div class="l">Passing</div></div>' +
       '<div class="kpi"><div class="n">' + (t.failed||0) + '</div><div class="l">Failed</div></div>' +
     '</div>' +
-    '<div class="card"><h2>Stage Pipeline</h2><div class="kpi-grid" style="margin-bottom:0">' +
-      '<div class="kpi"><div class="n">' + (s.lab||0) + '</div><div class="l">LAB</div></div>' +
-      '<div class="kpi"><div class="n">' + (s.pilot||0) + '</div><div class="l">PLT</div></div>' +
-      '<div class="kpi"><div class="n">' + (s.stability||0) + '</div><div class="l">STB</div></div>' +
-      '<div class="kpi"><div class="n">' + (s.commercial||0) + '</div><div class="l">COM</div></div>' +
-    '</div></div>' +
-    '<div class="card"><h2>Failure Trends</h2>' +
-      (t.failed === 0 ? '<p class="muted">No failures logged.</p>'
+    '<div class="bmr-card">' +
+      '<div class="eyebrow">Failure Trend Analysis</div>' +
+      '<h2 style="font-family:inherit;font-size:15px;color:var(--ink);margin:8px 0 14px;letter-spacing:0">' +
+      'Top failure categories</h2>' +
+      (t.failed === 0 ? '<p class="muted">No failures logged yet.</p>'
         : Object.entries(t.byCategory).sort(function(a,b){return b[1]-a[1];}).map(function(x){
             return '<div style="margin-bottom:10px">' +
-              '<div style="font-size:12px;font-weight:600;margin-bottom:3px">' + esc(x[0]) + ' — ' + x[1] + '</div>' +
-              '<div style="height:20px;background:#eef3f2;border-radius:4px;overflow:hidden">' +
-              '<div style="height:100%;width:' + (x[1]/total*100).toFixed(0) + '%;background:#b00020;border-radius:4px"></div>' +
-              '</div></div>';
+              '<div style="font-size:12.5px;margin-bottom:4px;font-weight:600">' +
+              esc(x[0]) + ' — ' + x[1] + ' occurrence' + (x[1]>1?'s':'') + '</div>' +
+              '<div class="bar"><div style="width:' + (x[1]/total*100).toFixed(0) + '%"></div>' +
+              '<span>' + (x[1]/total*100).toFixed(0) + '%</span></div></div>';
           }).join('')) +
     '</div>';
 }
 
-/* ============ MATERIALS ============ */
-function renderMaterials(){
-  $('view').innerHTML =
-    '<div class="card"><h2>Raw Materials' +
-      '<button class="btn btn-primary btn-sm" onclick="openMaterialForm()">+ New</button></h2>' +
-      (state.materials.length === 0
-        ? '<div class="empty-state"><h3>No materials yet</h3><p>Click + New.</p></div>'
-        : '<input placeholder="Filter…" style="width:100%;margin-bottom:12px;padding:8px 11px;border:1px solid var(--line);border-radius:6px" oninput="state.matFilter=this.value;paintMaterials()">' +
-          '<div id="matTable"></div>') +
-    '</div><div id="panelSlot"></div>';
-  if (state.materials.length) paintMaterials();
-}
-function paintMaterials(){
-  const q = (state.matFilter||'').toLowerCase();
-  const list = state.materials.filter(function(m){
-    return !q || m.name.toLowerCase().indexOf(q) >= 0 ||
-           m.id.toLowerCase().indexOf(q) >= 0;
-  });
-  $('matTable').innerHTML =
-    '<table><thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Limit</th>' +
-    '<th>Cost ' + CURRENCY + '/kg</th><th></th></tr></thead><tbody>' +
-    list.map(function(m){
-      return '<tr><td>' + esc(m.id) + '</td><td><b>' + esc(m.name) + '</b></td>' +
-        '<td><small>' + esc(m.category) + '</small></td>' +
-        '<td>' + esc(m.limit) + '</td>' +
-        '<td>' + (m.cost ? money(m.cost) : '—') + '</td>' +
-        '<td><button class="btn btn-outline btn-xs" onclick="openMaterialForm(' +
-          JSON.stringify(m).replace(/'/g,"&#39;") + ')">Edit</button></td></tr>';
-    }).join('') + '</tbody></table>';
-}
-function openMaterialForm(m){
-  m = m || {id:'',name:'',form:'',category:'',limit:'',density:'',cost:'',storage:''};
-  $('panelSlot').innerHTML =
-    '<div class="panel"><h3>' + (m.id ? 'Edit' : 'New') + ' Material</h3><div class="grid">' +
-    '<div class="field"><label>ID</label><input id="mf_id" value="' + esc(m.id) + '" placeholder="auto"></div>' +
-    '<div class="field"><label>Name</label><input id="mf_name" value="' + esc(m.name) + '"></div>' +
-    '<div class="field"><label>Form</label><input id="mf_form" value="' + esc(m.form) + '"></div>' +
-    '<div class="field"><label>Category</label><input id="mf_cat" value="' + esc(m.category) + '"></div>' +
-    '<div class="field"><label>Max Limit</label><input id="mf_limit" value="' + esc(m.limit) + '"></div>' +
-    '<div class="field"><label>Density</label><input id="mf_den" type="number" step="0.01" value="' + (m.density||'') + '"></div>' +
-    '<div class="field"><label>Cost ' + CURRENCY + '/kg</label><input id="mf_cost" type="number" step="0.01" value="' + (m.cost||'') + '"></div>' +
-    '<div class="field" style="grid-column:1/-1"><label>Storage</label><textarea id="mf_storage">' + esc(m.storage) + '</textarea></div>' +
-    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
-    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
-    '<button class="btn btn-green" onclick="submitMaterial()">Save</button></div></div>';
-}
-async function submitMaterial(){
-  const m = { id:$('mf_id').value.trim(), name:$('mf_name').value.trim(),
-    form:$('mf_form').value.trim(), category:$('mf_cat').value.trim(),
-    limit:$('mf_limit').value.trim(), density:parseFloat($('mf_den').value)||0,
-    cost:parseFloat($('mf_cost').value)||0, storage:$('mf_storage').value.trim() };
-  if (!m.name) return alert('Name required');
-  try { setStatus('Saving…');
-    await api('saveMaterial', {mat:m, user:state.currentUser ? state.currentUser.id : ''});
-    $('panelSlot').innerHTML = ''; await reload();
-  } catch(e){ setStatus('Failed: ' + e.message, true); }
+function stageTiles(s){
+  s = s || {lab:0,stability:0,pilot:0,commercial:0};
+  return '<div class="stage-tiles">' +
+    '<div class="stage-tile lab"><div class="badge">LAB</div>' +
+      '<div class="num">' + (s.lab||0) + '</div>' +
+      '<div class="title">Pre-formulation (Not Started)</div>' +
+      '<div class="sub">Status: Not Started (' + (s.lab||0) + ' batches)</div></div>' +
+    '<div class="stage-tile stb"><div class="badge">STB</div>' +
+      '<div class="num">' + (s.stability||0) + '</div>' +
+      '<div class="title">Stability Testing</div>' +
+      '<div class="sub">Stability pull retainers</div></div>' +
+    '<div class="stage-tile plt"><div class="badge">PLT</div>' +
+      '<div class="num">' + (s.pilot||0) + '</div>' +
+      '<div class="title">Pilot Batch</div>' +
+      '<div class="sub">5 kg – 50 kg trial runs</div></div>' +
+    '<div class="stage-tile com"><div class="badge">COM</div>' +
+      '<div class="num">' + (s.commercial||0) + '</div>' +
+      '<div class="title">Commercial Scale-up</div>' +
+      '<div class="sub">100 kg – 500 kg production</div></div>' +
+  '</div>';
 }
 
-/* ============ PRODUCTS ============ */
-function renderProducts(){
-  $('view').innerHTML =
-    '<div class="card"><h2>Products' +
-      '<button class="btn btn-primary btn-sm" onclick="openProductForm()">+ New</button></h2>' +
-      (state.products.length === 0
-        ? '<div class="empty-state"><h3>No products yet</h3></div>'
-        : '<div id="prodTable"></div>') +
-    '</div><div id="panelSlot"></div>';
-  if (state.products.length) paintProducts();
-}
-function paintProducts(){
-  $('prodTable').innerHTML =
-    '<table><thead><tr><th>ID</th><th>Name</th><th>Form</th><th>Status</th><th></th></tr></thead><tbody>' +
-    state.products.map(function(p){
-      return '<tr><td>' + esc(p.id) + '</td><td><b>' + esc(p.name) + '</b></td>' +
-        '<td>' + esc(p.form) + '</td><td>' + statusPill(p.status) + '</td>' +
-        '<td><button class="btn btn-outline btn-xs" onclick="useForFormulation(\'' + p.id + '\')">Formulate</button></td></tr>';
-    }).join('') + '</tbody></table>';
-}
-function openProductForm(p){
-  p = p || {id:'',name:'',category:'',form:DOSAGE_FORMS[0].name,delivery:'',
-            packSize:'',shelfLife:24,storage:'',status:PRODUCT_STATUSES[0]};
-  $('panelSlot').innerHTML =
-    '<div class="panel"><h3>New Product</h3><div class="grid">' +
-    '<div class="field"><label>ID</label><input id="pf_id" value="' + esc(p.id) + '" placeholder="auto"></div>' +
-    '<div class="field"><label>Name</label><input id="pf_name" value="' + esc(p.name) + '"></div>' +
-    '<div class="field"><label>Category</label><input id="pf_cat" value="' + esc(p.category) + '"></div>' +
-    '<div class="field"><label>Dosage Form</label><select id="pf_form">' +
-      DOSAGE_FORMS.map(function(d){
-        return '<option ' + (d.name===p.form?'selected':'') + '>' + d.name + '</option>';
-      }).join('') + '</select></div>' +
-    '<div class="field"><label>Pack Size</label><input id="pf_pack" value="' + esc(p.packSize) + '"></div>' +
-    '<div class="field"><label>Shelf Life (mo)</label><input id="pf_shelf" type="number" value="' + (p.shelfLife||24) + '"></div>' +
-    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
-    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
-    '<button class="btn btn-green" onclick="submitProduct()">Save</button></div></div>';
-}
-async function submitProduct(){
-  const p = { id:$('pf_id').value.trim(), name:$('pf_name').value.trim(),
-    category:$('pf_cat').value.trim(), form:$('pf_form').value,
-    delivery:'', packSize:$('pf_pack').value.trim(),
-    shelfLife:parseFloat($('pf_shelf').value)||24, storage:'',
-    status:PRODUCT_STATUSES[0] };
-  if (!p.name) return alert('Name required');
-  try { setStatus('Saving…');
-    await api('saveProduct', {product:p, user:state.currentUser ? state.currentUser.id : ''});
-    $('panelSlot').innerHTML = ''; await reload();
-  } catch(e){ setStatus('Failed: ' + e.message, true); }
-}
-function useForFormulation(pid){
-  state.activeProduct = pid; state.activeVersion = pid + '-V1.0';
-  state.tab = 'formulation';
-  document.querySelectorAll('#nav button').forEach(function(b){
-    b.classList.toggle('active', b.dataset.tab === 'formulation');
-  });
-  render();
-}
-
-/* ============ FORMULATION ============ */
-function renderFormulation(){
+/* ================================================================
+   BMR COMPOSE (main)
+   ================================================================ */
+function renderCompose(){
   if (!state.products.length) {
-    $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No products yet</h3></div></div>';
+    $('view').innerHTML = navRow('bmr') +
+      '<div class="empty-state"><h3>No products yet</h3>' +
+      '<p>Add a product to start.</p></div>' +
+      '<div id="panelSlot"></div>';
     return;
   }
-  const product = state.products.find(function(p){ return p.id === state.activeProduct; }) || state.products[0];
+  if (!state.materials.length) {
+    $('view').innerHTML = navRow('bmr') +
+      '<div class="empty-state"><h3>No raw materials yet</h3>' +
+      '<p>Add materials first.</p></div>' +
+      '<div id="panelSlot"></div>';
+    return;
+  }
+  const product = state.products.find(p => p.id === state.activeProduct) || state.products[0];
   state.activeProduct = product.id;
   if (!state.activeVersion) state.activeVersion = product.id + '-V1.0';
-  const isLiquid = /liquid|syrup|drop|solution|suspension|emulsion|inject/i.test(product.form || '');
+
+  const formProfile = detectForm(product.form);
+  const stages = state.stages || {lab:0,stability:0,pilot:0,commercial:0};
+
   $('view').innerHTML =
-    '<div class="card"><h2>Formulation' +
-      '<span><button class="btn btn-outline btn-sm" onclick="recalc()">Recalculate</button> ' +
-      '<button class="btn btn-primary btn-sm" onclick="openPicker()">+ Add Ingredients</button></span></h2>' +
-      '<div class="grid">' +
-      '<div class="field"><label>Product</label><select onchange="state.activeProduct=this.value;state.activeVersion=this.value+\'-V1.0\';renderFormulation()">' +
-        state.products.map(function(p){
-          return '<option value="' + p.id + '" ' + (p.id===product.id?'selected':'') + '>' + esc(p.id) + ' — ' + esc(p.name) + '</option>';
-        }).join('') + '</select></div>' +
-      '<div class="field"><label>Version</label><input value="' + esc(state.activeVersion) + '" onchange="state.activeVersion=this.value;recalc()"></div>' +
-      '<div class="field"><label>Batch Volume (' + (isLiquid?'L':'kg') + ')</label><input type="number" value="' + state.batchVolume + '" onchange="state.batchVolume=parseFloat(this.value)||1000;recalc()"></div>' +
-      '</div><div id="calcSlot"></div></div><div id="pickerSlot"></div>';
+    navRow('bmr') +
+    stageTiles(stages) +
+    '<div class="bmr-card">' +
+      '<div class="top">' +
+        '<div class="left">' +
+          '<div class="eyebrow">Batch Manufacturing Record (BMR)</div>' +
+          '<h2>' + esc(docRef(product.id)) + '</h2>' +
+          '<div class="bmr-meta">' +
+            '<span class="meta-chip">Stage: Pilot Batch Trial</span>' +
+            '<span class="meta-chip outline">' + esc(product.form) + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="right">' +
+          '<button class="btn btn-purple" data-action="aiAssistant">✦ AI Assistant</button>' +
+          '<button class="btn btn-outline" data-action="resetForm">↻ Reset</button>' +
+          '<button class="btn btn-outline" onclick="window.print()">⬇ PDF</button>' +
+          '<button class="btn btn-outline" onclick="window.print()">🖨 Print</button>' +
+          '<button class="btn btn-green" data-action="openIssue">💾 Save BMR</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="engine-head">' +
+        '<div>' +
+          '<h3>⚙ Dosage Formulation Engine</h3>' +
+          '<p>Switch dosage category to dynamically configure units, density, ' +
+          'unit weight, addition order, and CPP test criteria.</p>' +
+        '</div>' +
+        '<div class="engine-actions">' +
+          '<button class="btn btn-purple" data-action="aiAssistant">✦ Auto-Formulate</button>' +
+          '<button class="btn btn-outline" data-action="loadTemplate">Load Standard Template</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="form-chips">' +
+        DOSAGE_FORMS.map(function(d){
+          const active = d.short === formProfile.short;
+          return '<button class="form-chip ' + (active?'active':'') + '" ' +
+            'data-action="changeDosageForm" ' +
+            'data-payload=\'' + JSON.stringify({form: d.name}).replace(/'/g,"&#39;") + '\'>' +
+            '<div class="chip-title">' + esc(d.short) + '</div>' +
+            '<div class="chip-sub">' + esc(d.sub) + '</div></button>';
+        }).join('') +
+      '</div>' +
+    '</div>' +
+
+    '<div class="bmr-card">' +
+      '<div class="eyebrow">Formulation Record</div>' +
+      '<div class="field-row" style="margin-top:14px">' +
+        '<div class="field"><label>Product</label>' +
+          '<select onchange="state.activeProduct=this.value;state.activeVersion=this.value+\'-V1.0\';renderCompose()">' +
+          state.products.map(function(p){
+            return '<option value="' + p.id + '" ' + (p.id===product.id?'selected':'') + '>' +
+              esc(p.id) + ' — ' + esc(p.name) + '</option>';
+          }).join('') + '</select></div>' +
+        '<div class="field"><label>Formulation Version</label>' +
+          '<input value="' + esc(state.activeVersion) + '" onchange="state.activeVersion=this.value;recalc()"></div>' +
+        '<div class="field"><label>Batch Volume (L / kg)</label>' +
+          '<input type="number" value="' + state.batchVolume + '" onchange="state.batchVolume=parseFloat(this.value)||1000;recalc()"></div>' +
+        '<div class="field"><label>BMR Reference</label>' +
+          '<input value="' + esc(docRef(product.id)) + '" readonly></div>' +
+      '</div>' +
+      '<div class="row-between" style="margin-bottom:14px">' +
+        '<div class="muted" style="font-size:12.5px">' +
+          '<b>Detected form:</b> ' + esc(product.form) +
+        '</div>' +
+        '<div class="row">' +
+          '<button class="btn btn-primary" onclick="recalc()">↻ Recalculate</button>' +
+          '<button class="btn btn-primary" data-action="openPicker">+ Add Ingredients</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="calcSlot"></div>' +
+    '</div>' +
+
+    '<div id="pickerSlot"></div>' +
+    '<div id="panelSlot"></div>';
+
   recalc();
 }
+
 async function recalc(){
   const slot = $('calcSlot'); if (!slot) return;
   slot.innerHTML = '<p class="muted">Calculating…</p>';
   try {
-    const c = await api('calculate', {productId:state.activeProduct, versionId:state.activeVersion, batchVolume:state.batchVolume});
-    state.calc = c; paintCalc(c);
-  } catch(e){ slot.innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+    const c = await api('calculate', {
+      productId: state.activeProduct,
+      versionId: state.activeVersion,
+      batchVolume: state.batchVolume
+    });
+    state.calc = c;
+    paintCalc(c);
+  } catch(e){
+    slot.innerHTML = '<p class="status-strip error">' + esc(e.message) + '</p>';
+  }
 }
+
 function paintCalc(c){
   const over = c.lines.filter(function(l){ return l.overLimit; });
   $('calcSlot').innerHTML =
-    (over.length ? '<div class="callout fail"><b>⚠ ' + over.length + ' over limit</b></div>' : '') +
-    (c.lines.length && !c.balanced ? '<div class="callout warn"><b>Not balanced:</b> ' + c.totalPct + '%</div>' : '') +
-    '<div class="grid" style="margin-top:12px">' +
-    '<div class="field"><label>Theoretical Yield</label><input value="' + c.theoreticalYield.toLocaleString() + ' ' + esc(c.yieldUnit) + '" readonly></div>' +
-    '<div class="field"><label>Total %</label><input value="' + c.totalPct + '%" readonly></div>' +
-    '<div class="field"><label>Total Cost</label><input value="' + money(c.totalCost) + '" readonly></div>' +
-    '<div class="field"><label>Balance</label><input value="' + (c.balanced?'✓ Balanced':'⚠ Check') + '" readonly></div>' +
+    (over.length ? '<div class="callout fail"><b>⚠ ' + over.length +
+      ' line(s) exceed the daily recommended limit</b>' +
+      over.map(function(l){ return '<br>• ' + esc(l.ingredient) + ' — ' +
+        l.dailyDose + ' mg/day vs limit ' + esc(l.matLimit); }).join('') +
+      '</div>' : '') +
+    (c.lines.length && !c.balanced ? '<div class="callout warn"><b>Formula not balanced:</b> total = ' +
+      c.totalPct + '% (target 100.00%)</div>' : '') +
+    '<div class="field-row" style="margin-top:14px">' +
+      '<div class="field"><label>Dosage Form</label><input value="' + esc(c.product.form) + '" readonly></div>' +
+      '<div class="field"><label>Calculation Basis</label><input value="' + esc(c.basis) + '" readonly></div>' +
+      '<div class="field"><label>Batch Volume</label><input value="' + c.batchVolume + (c.isLiquid?' L':' kg') + '" readonly></div>' +
+      '<div class="field"><label>Theoretical Yield</label><input value="' + c.theoreticalYield.toLocaleString() + ' ' + esc(c.yieldUnit) + '" readonly></div>' +
+      '<div class="field"><label>Total %</label><input value="' + c.totalPct + '%" readonly></div>' +
+      '<div class="field"><label>Total Cost</label><input value="' + money(c.totalCost) + '" readonly></div>' +
+      '<div class="field"><label>Balance</label><input value="' + (c.balanced?'✓ Balanced':'⚠ Check') + '" readonly></div>' +
     '</div>' +
-    '<table style="margin-top:14px"><thead><tr><th>ID</th><th>Ingredient</th><th>Phase</th>' +
-    '<th>Unit Qty</th><th>% w/w</th><th>Batch (kg)</th><th>Cost</th><th>Check</th><th></th></tr></thead><tbody>' +
+    '<div style="overflow-x:auto;margin-top:12px">' +
+    '<table><thead><tr>' +
+      '<th>Recipe ID</th><th>Ingredient</th><th>Phase</th><th>Category</th>' +
+      '<th>Unit Qty</th><th>Overage</th><th>% w/w</th><th>Batch (kg)</th>' +
+      '<th>Cost ' + CURRENCY + '</th><th>Daily Dose</th><th>Limit</th>' +
+      '<th>Check</th><th></th>' +
+    '</tr></thead><tbody>' +
     (c.lines.length === 0
-      ? '<tr><td colspan="9" class="muted" style="text-align:center;padding:20px">No lines yet. Click + Add Ingredients.</td></tr>'
+      ? '<tr><td colspan="13" class="muted" style="text-align:center;padding:22px">' +
+        'No ingredients yet. Click <b>+ Add Ingredients</b>.</td></tr>'
       : c.lines.map(function(l){
-          return '<tr><td>' + esc(l.recipeId) + '</td><td><b>' + esc(l.ingredient) + '</b></td>' +
+          return '<tr>' +
+            '<td><span style="font-family:monospace">' + esc(l.recipeId) + '</span></td>' +
+            '<td><b>' + esc(l.ingredient) + '</b></td>' +
             '<td><small>' + esc(l.phase) + '</small></td>' +
+            '<td><small>' + esc(l.matCategory) + '</small></td>' +
             '<td>' + l.unitQty + ' ' + esc(l.unit) + '</td>' +
-            '<td>' + l.pct + '%</td><td>' + l.batchKg + '</td>' +
+            '<td>' + (l.overage||0) + '</td>' +
+            '<td>' + l.pct + '%</td>' +
+            '<td>' + l.batchKg + '</td>' +
             '<td>' + (l.costPerBatch ? money(l.costPerBatch) : '—') + '</td>' +
-            '<td>' + (l.overLimit ? '<span class="pill pill-fail">OVER</span>' : '<span class="pill pill-ok">OK</span>') + '</td>' +
-            '<td><button class="btn btn-danger btn-xs" onclick="deleteRecipe(\'' + l.recipeId + '\')">✕</button></td></tr>';
+            '<td>' + l.dailyDose + '</td>' +
+            '<td><small>' + esc(l.matLimit) + '</small></td>' +
+            '<td>' + (l.overLimit ? '<span class="pill pill-fail">OVER</span>' :
+                       '<span class="pill pill-ok">OK</span>') + '</td>' +
+            '<td><button class="btn btn-danger btn-xs" data-action="deleteRecipe" ' +
+              'data-payload=\'' + JSON.stringify({recipeId: l.recipeId}).replace(/'/g,"&#39;") +
+              '\'>✕</button></td>' +
+          '</tr>';
         }).join('')) +
-    (c.lines.length ? '<tr class="total-row"><td colspan="4">TOTAL</td><td>' + c.totalPct + '%</td>' +
+    (c.lines.length ?
+      '<tr class="total-row"><td colspan="6">TOTAL</td>' +
+      '<td>' + c.totalPct + '%</td>' +
       '<td>' + c.lines.reduce(function(s,l){return s+l.batchKg;},0).toFixed(3) + '</td>' +
-      '<td>' + money(c.totalCost) + '</td><td colspan="2">' + (c.balanced?'Balanced':'Adjust') + '</td></tr>' : '') +
-    '</tbody></table>';
+      '<td>' + money(c.totalCost) + '</td>' +
+      '<td colspan="4">' + (c.balanced?'Balanced':'Adjust q.s.') + '</td></tr>' : '') +
+    '</tbody></table></div>';
 }
+
+/* ================================================================
+   INGREDIENT PICKER
+   ================================================================ */
 function openPicker(){
-  const phases = ['Phase A (API Active Blending)','Phase B (Pre-mix)','Phase C (Bulk Make-up)',
-    'Phase D (q.s. / Adjust)','Stage 1 (Dispensing)','Stage 2 (Processing)','Stage 3 (Packaging)'];
-  const sorted = state.materials.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  const product = state.products.find(p => p.id === state.activeProduct);
+  if (!product) return alert('Pick a product first');
+  if (!state.materials.length) return alert('Add raw materials first');
+
+  const phases = ['Phase A (API Active Blending)','Phase B (Pre-mix)',
+    'Phase C (Bulk Make-up)','Phase D (q.s. / Adjust)',
+    'Stage 1 (Dispensing)','Stage 2 (Processing)','Stage 3 (Packaging)'];
+  const sorted = state.materials.slice().sort(function(a,b){
+    return a.name.localeCompare(b.name);
+  });
+
   $('pickerSlot').innerHTML =
-    '<div class="panel"><h3>Add Ingredients — Multi-Pick</h3>' +
-    '<div class="grid" style="margin-bottom:14px">' +
-    '<div class="field"><label>Default Phase</label><select id="bulkPhase">' +
-      phases.map(function(p){return '<option>'+p+'</option>';}).join('') + '</select></div>' +
-    '<div class="field"><label>Filter</label><input placeholder="Type…" oninput="filterPicker(this.value)"></div>' +
-    '</div><div class="picker-wrap"><table><thead><tr><th style="width:34px"></th><th>ID</th><th>Name</th>' +
-    '<th>Category</th><th>Limit</th><th style="width:100px">Qty</th><th style="width:80px">Unit</th>' +
-    '<th style="width:70px">Over%</th><th>Notes</th></tr></thead><tbody>' +
-    sorted.map(function(m){
-      return '<tr data-name="' + esc(m.name.toLowerCase()) + '">' +
-        '<td><input type="checkbox" class="pick" data-mat="' + esc(m.name) + '" onchange="toggleRow(this)"></td>' +
-        '<td>' + esc(m.id) + '</td><td><b>' + esc(m.name) + '</b></td>' +
-        '<td><small>' + esc(m.category) + '</small></td>' +
-        '<td><small>' + esc(m.limit) + '</small></td>' +
-        '<td><input type="number" class="qty" step="0.001" disabled></td>' +
-        '<td><select class="unit" disabled>' +
-          ['mg','g','mL','IU','mcg'].map(function(u){return '<option>'+u+'</option>';}).join('') +
-        '</select></td>' +
-        '<td><input type="number" class="ov" value="0" step="0.1" disabled></td>' +
-        '<td><input type="text" class="notes" disabled></td></tr>';
-    }).join('') + '</tbody></table></div>' +
-    '<div class="row" style="margin-top:14px;justify-content:flex-end">' +
-    '<span id="pickCount" class="muted" style="font-size:12.5px"></span>' +
-    '<button class="btn btn-outline" onclick="$(\'pickerSlot\').innerHTML=\'\'">Cancel</button>' +
-    '<button class="btn btn-green" onclick="submitBulk()">Save All Selected</button></div></div>';
+    '<div class="panel">' +
+      '<div class="row-between" style="margin-bottom:14px">' +
+        '<h3 style="margin:0">Add Ingredients — Multi-Pick</h3>' +
+        '<div class="row">' +
+          '<button class="btn btn-green" data-action="saveBulk">💾 Save All Selected</button>' +
+          '<button class="btn btn-outline" onclick="$(\'pickerSlot\').innerHTML=\'\'">Cancel</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="callout info">Tick every ingredient you need, fill quantity per row, ' +
+      'then click <b>Save All Selected</b>.</div>' +
+      '<div class="field-row" style="margin-bottom:14px">' +
+        '<div class="field"><label>Default Phase</label><select id="bulkPhase">' +
+          phases.map(function(p){ return '<option>' + p + '</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="field"><label>Filter</label>' +
+          '<input placeholder="Type to filter…" oninput="filterPicker(this.value)"></div>' +
+      '</div>' +
+      '<div class="picker-wrap"><table><thead><tr>' +
+        '<th style="width:34px"></th><th>ID</th><th>Name</th><th>Category</th>' +
+        '<th>Limit</th><th style="width:100px">Unit Qty</th><th style="width:80px">Unit</th>' +
+        '<th style="width:70px">Over%</th><th>Notes</th>' +
+      '</tr></thead><tbody>' +
+      sorted.map(function(m){
+        return '<tr data-name="' + esc(m.name.toLowerCase()) + '" data-cat="' +
+          esc((m.category||'').toLowerCase()) + '">' +
+          '<td><input type="checkbox" class="pick" data-mat="' + esc(m.name) +
+            '" onchange="toggleRow(this)"></td>' +
+          '<td>' + esc(m.id) + '</td>' +
+          '<td><b>' + esc(m.name) + '</b></td>' +
+          '<td><small>' + esc(m.category||'') + '</small></td>' +
+          '<td><small>' + esc(m.limit||'') + '</small></td>' +
+          '<td><input type="number" class="qty" step="0.001" disabled></td>' +
+          '<td><select class="unit" disabled>' +
+            ['mg','g','mL','IU','mcg'].map(function(u){ return '<option>'+u+'</option>'; }).join('') +
+          '</select></td>' +
+          '<td><input type="number" class="ov" value="0" step="0.1" disabled></td>' +
+          '<td><input type="text" class="notes" disabled></td>' +
+        '</tr>';
+      }).join('') +
+      '</tbody></table></div>' +
+      '<div style="text-align:right;margin-top:14px">' +
+        '<span id="pickCount" class="muted" style="margin-right:14px;font-size:12.5px"></span>' +
+      '</div>' +
+    '</div>';
+  updateCount();
 }
+
 function toggleRow(cb){
   const row = cb.closest('tr');
-  row.querySelectorAll('input:not(.pick), select').forEach(function(el){ el.disabled = !cb.checked; });
+  row.querySelectorAll('input:not(.pick), select').forEach(function(el){
+    el.disabled = !cb.checked;
+  });
   updateCount();
 }
 function updateCount(){
@@ -498,254 +769,660 @@ function updateCount(){
     if ((parseFloat(row.querySelector('.qty').value)||0) > 0) ready++;
   });
   const el = $('pickCount');
-  if (el) el.textContent = picks.length ? ready + ' of ' + picks.length + ' ready' : 'Nothing selected';
+  if (el) el.textContent = picks.length
+    ? ready + ' of ' + picks.length + ' ready'
+    : 'Nothing selected yet';
 }
 function filterPicker(q){
   q = (q||'').toLowerCase();
   document.querySelectorAll('.picker-wrap tbody tr').forEach(function(row){
     const n = row.getAttribute('data-name') || '';
-    row.style.display = (!q || n.indexOf(q) >= 0) ? '' : 'none';
+    const c = row.getAttribute('data-cat') || '';
+    row.style.display = (!q || n.indexOf(q) >= 0 || c.indexOf(q) >= 0) ? '' : 'none';
   });
 }
+
 async function submitBulk(){
   const picks = document.querySelectorAll('.pick:checked');
   if (!picks.length) return alert('Tick at least one ingredient.');
   const phase = $('bulkPhase').value;
-  const product = state.products.find(function(p){return p.id === state.activeProduct;});
+  const product = state.products.find(p => p.id === state.activeProduct);
   const lines = [];
   for (let i = 0; i < picks.length; i++) {
     const cb = picks[i];
     const row = cb.closest('tr');
-    const qty = parseFloat(row.querySelector('.qty').value)||0;
+    const qty = parseFloat(row.querySelector('.qty').value) || 0;
     if (!qty) return alert('Missing qty for ' + cb.getAttribute('data-mat'));
     lines.push({
-      recipeId:'', version:state.activeVersion, productId:product.id, product:product.name,
-      ingredient:cb.getAttribute('data-mat'), phase:phase, unitQty:qty,
-      unit:row.querySelector('.unit').value,
-      overage:parseFloat(row.querySelector('.ov').value)||0,
-      notes:row.querySelector('.notes').value.trim(),
-      date:new Date().toISOString()
+      recipeId:'', version: state.activeVersion, productId: product.id,
+      product: product.name, ingredient: cb.getAttribute('data-mat'),
+      phase: phase, unitQty: qty, unit: row.querySelector('.unit').value,
+      overage: parseFloat(row.querySelector('.ov').value)||0,
+      notes: row.querySelector('.notes').value.trim(),
+      date: new Date().toISOString()
     });
   }
-  try { setStatus('Saving ' + lines.length + ' line(s)…');
-    await api('saveRecipeBulk', {lines:lines, user:state.currentUser ? state.currentUser.id : ''});
+  try {
+    setStatus('Saving ' + lines.length + ' line(s)…');
+    await api('saveRecipeBulk', {lines:lines, user: state.currentUser ? state.currentUser.id : ''});
     $('pickerSlot').innerHTML = '';
     setStatus('Saved ' + lines.length + ' line(s).');
-    await recalc();
+    recalc();
   } catch(e){ setStatus('Failed: ' + e.message, true); }
 }
+
 async function deleteRecipe(rid){
   if (!confirm('Delete ' + rid + '?')) return;
-  try { await api('deleteRecipe', {recipeId:rid, user:state.currentUser ? state.currentUser.id : ''}); await recalc(); }
-  catch(e){ setStatus('Failed: ' + e.message, true); }
+  try {
+    await api('deleteRecipe', {recipeId: rid, user: state.currentUser ? state.currentUser.id : ''});
+    recalc();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
 }
 
-/* ============ TRIALS ============ */
-function renderTrials(){
-  if (!state.products.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>Add a product first</h3></div></div>'; return; }
-  const product = state.products.find(function(p){return p.id === state.activeProduct;}) || state.products[0];
-  state.activeProduct = product.id;
-  const vs = state.versions.filter(function(v){return v.productId === product.id;});
+/* ================================================================
+   PIPELINE
+   ================================================================ */
+function renderPipeline(){
+  const s = state.stages || {lab:0,stability:0,pilot:0,commercial:0};
+  const groups = {lab:[],stability:[],pilot:[],commercial:[]};
+  state.versions.forEach(function(v){
+    const st = String(v.stage||'').toLowerCase();
+    if (/lab|pre/.test(st)) groups.lab.push(v);
+    else if (/stability|stab/.test(st)) groups.stability.push(v);
+    else if (/pilot/.test(st)) groups.pilot.push(v);
+    else if (/commercial/.test(st)) groups.commercial.push(v);
+  });
   $('view').innerHTML =
-    '<div class="card"><h2>Trial Versions' +
-      '<button class="btn btn-primary btn-sm" onclick="openVersionForm()">+ New Version</button></h2>' +
-      (vs.length === 0 ? '<p class="muted">No versions yet.</p>'
-        : '<table><thead><tr><th>Version</th><th>Stage</th><th>Status</th><th>Failure</th><th>Date</th><th></th></tr></thead><tbody>' +
+    navRow('pipeline') +
+    stageTiles(s) +
+    ['lab','stability','pilot','commercial'].map(function(key){
+      const label = key==='lab'?'Lab Bench Trials'
+                   :key==='stability'?'Stability Testing'
+                   :key==='pilot'?'Pilot Batch Trials':'Commercial Scale-up';
+      const list = groups[key] || [];
+      return '<div class="bmr-card">' +
+        '<div class="eyebrow">' + esc(label) + ' — ' + list.length + ' version(s)</div>' +
+        (list.length === 0
+          ? '<p class="muted" style="margin-top:12px">Nothing in this stage yet.</p>'
+          : '<table style="margin-top:14px"><thead><tr>' +
+            '<th>Version</th><th>Product</th><th>Status</th><th>Date</th>' +
+            '</tr></thead><tbody>' +
+            list.map(function(v){
+              return '<tr><td><span style="font-family:monospace"><b>' + esc(v.versionId) +
+                '</b></span></td><td>' + esc(v.productId) + '</td>' +
+                '<td>' + statusPill(v.status) + '</td>' +
+                '<td>' + esc(String(v.date).slice(0,10)) + '</td></tr>';
+            }).join('') + '</tbody></table>') +
+      '</div>';
+    }).join('');
+}
+
+/* ================================================================
+   TRIALS
+   ================================================================ */
+function renderTrials(){
+  if (!state.products.length) {
+    $('view').innerHTML = navRow('trials') +
+      '<div class="empty-state"><h3>No products yet</h3></div><div id="panelSlot"></div>';
+    return;
+  }
+  const product = state.products.find(p => p.id === state.activeProduct) || state.products[0];
+  state.activeProduct = product.id;
+  const vs = state.versions.filter(function(v){ return v.productId === product.id; });
+
+  $('view').innerHTML =
+    navRow('trials') +
+    '<div class="bmr-card">' +
+      '<div class="row-between">' +
+        '<div><div class="eyebrow">BMR Trials Log</div>' +
+        '<h2 style="font-family:inherit;font-size:17px;color:var(--teal-dark);' +
+        'letter-spacing:0;margin-top:4px">' + esc(product.id) + ' — ' + esc(product.name) + '</h2></div>' +
+        '<button class="btn btn-primary" data-action="newVersion">+ New Version</button>' +
+      '</div>' +
+      (vs.length === 0
+        ? '<p class="muted" style="margin-top:14px">No versions yet.</p>'
+        : '<table style="margin-top:16px"><thead><tr>' +
+          '<th>Version</th><th>Stage</th><th>Status</th><th>Failure</th>' +
+          '<th>Date</th><th></th></tr></thead><tbody>' +
           vs.slice().reverse().map(function(v){
-            return '<tr><td><b>' + esc(v.versionId) + '</b></td>' +
+            return '<tr>' +
+              '<td><span style="font-family:monospace"><b>' + esc(v.versionId) + '</b></span></td>' +
               '<td>' + stagePill(v.stage) + '</td>' +
               '<td>' + statusPill(v.status) + '</td>' +
               '<td>' + esc(v.failureCategory||'—') + '</td>' +
               '<td>' + esc(String(v.date).slice(0,10)) + '</td>' +
-              '<td><button class="btn btn-danger btn-xs" onclick="deleteVersion(\'' + v.versionId + '\')">✕</button></td></tr>';
+              '<td><button class="btn btn-outline btn-xs" data-action="goStepsFor" ' +
+                'data-payload=\'' + JSON.stringify({versionId: v.versionId}).replace(/'/g,"&#39;") +
+                '\'>Steps</button> ' +
+              '<button class="btn btn-danger btn-xs" data-action="deleteVersion" ' +
+                'data-payload=\'' + JSON.stringify({versionId: v.versionId}).replace(/'/g,"&#39;") +
+                '\'>✕</button></td>' +
+            '</tr>';
           }).join('') + '</tbody></table>') +
     '</div><div id="panelSlot"></div>';
 }
+
 function openVersionForm(){
-  const existing = state.versions.filter(function(x){return x.productId === state.activeProduct;});
+  const existing = state.versions.filter(function(x){ return x.productId === state.activeProduct; });
   const next = existing.length
-    ? (Math.max.apply(null, existing.map(function(x){return parseFloat(String(x.version).split('.')[1]||0);})) + 1).toFixed(1)
+    ? (Math.max.apply(null, existing.map(function(x){
+        return parseFloat(String(x.version).split('.')[1]||0);
+      })) + 1).toFixed(1)
     : '1.0';
   const vid = state.activeProduct + '-V' + next;
+
   $('panelSlot').innerHTML =
-    '<div class="panel"><h3>New Trial Version</h3><div class="grid">' +
-    '<div class="field"><label>Version ID</label><input id="vf_id" value="' + esc(vid) + '" readonly></div>' +
-    '<div class="field"><label>Stage</label><select id="vf_stage">' +
-      STAGES.map(function(s){return '<option>'+s+'</option>';}).join('') + '</select></div>' +
-    '<div class="field"><label>Status</label><select id="vf_status" onchange="toggleFail()">' +
-      STATUSES.map(function(s){return '<option>'+s+'</option>';}).join('') + '</select></div>' +
-    '<div class="field"><label>Failure Category</label><select id="vf_cat"><option value="">—</option>' +
-      FAIL_CATS.map(function(c){return '<option>'+c+'</option>';}).join('') + '</select></div>' +
-    '<div class="field" style="grid-column:1/-1"><label>Failure Reason (min 20 on FAIL)</label><textarea id="vf_reason"></textarea></div>' +
-    '<div class="field"><label>Observed</label><input id="vf_obs"></div>' +
-    '<div class="field"><label>Expected</label><input id="vf_exp"></div>' +
-    '<div class="field" style="grid-column:1/-1"><label>CAPA (min 10 on FAIL)</label><textarea id="vf_capa"></textarea></div>' +
-    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
-    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
-    '<button class="btn btn-green" onclick="submitVersion()">Save</button></div></div>';
+    '<div class="panel"><h3>New Trial Version</h3>' +
+    '<div class="callout info">Version ID follows <b>PRD-XXX-Vmajor.minor</b>. ' +
+    'Stage progression gated by prior PASS.</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Version ID</label><input id="vf_id" value="' + esc(vid) + '" readonly></div>' +
+      '<div class="field"><label>Stage</label><select id="vf_stage">' +
+        STAGES.map(function(s){ return '<option>'+s+'</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label>Status</label><select id="vf_status" onchange="toggleFail()">' +
+        STATUSES.map(function(s){ return '<option>'+s+'</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label>Failure Category</label>' +
+        '<select id="vf_cat"><option value="">—</option>' +
+        FAIL_CATS.map(function(c){ return '<option>'+c+'</option>'; }).join('') + '</select></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field" style="grid-column:1/-1"><label>Failure Reason (min 20 on FAIL)</label>' +
+        '<textarea id="vf_reason"></textarea></div>' +
+      '<div class="field"><label>Observed</label><input id="vf_obs"></div>' +
+      '<div class="field"><label>Expected</label><input id="vf_exp"></div>' +
+      '<div class="field" style="grid-column:1/-1"><label>CAPA (min 10 on FAIL)</label>' +
+        '<textarea id="vf_capa"></textarea></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:16px;justify-content:flex-end">' +
+      '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+      '<button class="btn btn-green" data-action="saveVersion">Save Version</button>' +
+    '</div></div>';
   toggleFail();
 }
+
 function toggleFail(){
-  const fail = $('vf_status').value === 'FAIL';
+  const el = $('vf_status'); if (!el) return;
+  const fail = el.value === 'FAIL';
   ['vf_cat','vf_reason','vf_obs','vf_exp','vf_capa'].forEach(function(id){
-    const el = $(id); if (el) { el.disabled = !fail; el.style.opacity = fail ? '1' : '.5'; }
+    const x = $(id); if (x) { x.disabled = !fail; x.style.opacity = fail ? '1' : '.5'; }
   });
 }
+
 async function submitVersion(){
   const v = {
-    versionId:$('vf_id').value.trim(), productId:state.activeProduct,
-    version:$('vf_id').value.split('-V')[1] || '1.0',
-    stage:$('vf_stage').value, status:$('vf_status').value,
-    failureCategory:$('vf_cat').value, failureReason:$('vf_reason').value.trim(),
-    observedValue:$('vf_obs').value.trim(), expectedValue:$('vf_exp').value.trim(),
-    correctiveAction:$('vf_capa').value.trim(),
-    loggedBy:state.currentUser ? state.currentUser.id : '',
-    date:new Date().toISOString()
+    versionId: $('vf_id').value.trim(),
+    productId: state.activeProduct,
+    version: $('vf_id').value.split('-V')[1] || '1.0',
+    stage: $('vf_stage').value,
+    status: $('vf_status').value,
+    failureCategory: $('vf_cat').value,
+    failureReason: $('vf_reason').value.trim(),
+    observedValue: $('vf_obs').value.trim(),
+    expectedValue: $('vf_exp').value.trim(),
+    correctiveAction: $('vf_capa').value.trim(),
+    loggedBy: state.currentUser ? state.currentUser.id : '',
+    date: new Date().toISOString()
   };
-  try { setStatus('Saving version…');
-    await api('saveVersion', {version:v, user:state.currentUser ? state.currentUser.id : ''});
-    $('panelSlot').innerHTML = ''; await reload();
+  try {
+    setStatus('Saving…');
+    await api('saveVersion', {version: v, user: state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = '';
+    await reload();
   } catch(e){ setStatus('Failed: ' + e.message, true); }
 }
+
 async function deleteVersion(vid){
   if (!confirm('Delete ' + vid + '?')) return;
-  try { await api('deleteVersion', {versionId:vid, user:state.currentUser ? state.currentUser.id : ''}); await reload(); }
-  catch(e){ setStatus('Failed: ' + e.message, true); }
-}
-
-/* ============ STEPS ============ */
-function renderSteps(){
-  if (!state.versions.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No versions yet</h3></div></div>'; return; }
-  const vid = state.stepsVersion || state.versions[0].versionId;
-  state.stepsVersion = vid;
-  $('view').innerHTML =
-    '<div class="card"><h2>Production Steps' +
-      '<button class="btn btn-primary btn-sm" onclick="openStepForm()">+ Add Step</button></h2>' +
-      '<div class="field" style="margin-bottom:14px;max-width:400px"><label>Version</label>' +
-      '<select onchange="state.stepsVersion=this.value;loadSteps()">' +
-      state.versions.map(function(v){
-        return '<option value="' + v.versionId + '" ' + (v.versionId===vid?'selected':'') + '>' + esc(v.versionId) + '</option>';
-      }).join('') + '</select></div>' +
-      '<div id="stepsList">Loading…</div></div><div id="panelSlot"></div>';
-  loadSteps();
-}
-async function loadSteps(){
   try {
-    const steps = await api('getSteps', {versionId:state.stepsVersion});
-    state.steps = steps;
-    const el = $('stepsList');
-    if (!steps.length) { el.innerHTML = '<p class="muted">No steps yet.</p>'; return; }
-    el.innerHTML = steps.map(function(s){
-      return '<div style="background:#f0f9f7;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:10px">' +
-        '<b style="color:var(--brand-dark)">Step ' + s.step + ' — ' + esc(s.stage||'') + '</b>' +
-        '<p style="margin:6px 0">' + esc(s.instruction) + '</p>' +
-        '<button class="btn btn-danger btn-xs" onclick="deleteStep(' + s.step + ')">Delete</button></div>';
-    }).join('');
-  } catch(e){ $('stepsList').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
-}
-function openStepForm(){
-  const next = state.steps.length ? Math.max.apply(null, state.steps.map(function(x){return x.step;})) + 1 : 1;
-  $('panelSlot').innerHTML =
-    '<div class="panel"><h3>New Step</h3><div class="grid">' +
-    '<div class="field"><label>Step #</label><input id="sf_step" type="number" value="' + next + '"></div>' +
-    '<div class="field"><label>Stage</label><input id="sf_stage"></div>' +
-    '<div class="field" style="grid-column:1/-1"><label>Instruction *</label><textarea id="sf_inst" style="min-height:80px"></textarea></div>' +
-    '<div class="field"><label>Equipment</label><input id="sf_eq"></div>' +
-    '<div class="field"><label>Target</label><input id="sf_target"></div>' +
-    '<div class="field"><label>IPC</label><input id="sf_ipc"></div>' +
-    '<div class="field"><label>Duration</label><input id="sf_dur"></div>' +
-    '</div><div class="row" style="margin-top:16px;justify-content:flex-end">' +
-    '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
-    '<button class="btn btn-green" onclick="submitStep()">Save</button></div></div>';
-}
-async function submitStep(){
-  const s = { versionId:state.stepsVersion,
-    step:parseInt($('sf_step').value,10)||1, stage:$('sf_stage').value.trim(),
-    instruction:$('sf_inst').value.trim(), equipment:$('sf_eq').value.trim(),
-    target:$('sf_target').value.trim(), ipc:$('sf_ipc').value.trim(),
-    duration:$('sf_dur').value.trim() };
-  try { await api('saveStep', {step:s, user:state.currentUser ? state.currentUser.id : ''});
-    $('panelSlot').innerHTML = ''; loadSteps();
+    await api('deleteVersion', {versionId: vid, user: state.currentUser ? state.currentUser.id : ''});
+    await reload();
   } catch(e){ setStatus('Failed: ' + e.message, true); }
 }
-async function deleteStep(step){
-  if (!confirm('Delete step ' + step + '?')) return;
-  try { await api('deleteStep', {versionId:state.stepsVersion, step:step, user:state.currentUser ? state.currentUser.id : ''}); loadSteps(); }
-  catch(e){ setStatus('Failed: ' + e.message, true); }
+
+/* ================================================================
+   PRODUCTS
+   ================================================================ */
+function renderProducts(){
+  $('view').innerHTML =
+    navRow('products') +
+    '<div class="bmr-card">' +
+      '<div class="row-between">' +
+        '<div><div class="eyebrow">Product Master</div>' +
+        '<h2 style="font-family:inherit;font-size:17px;color:var(--teal-dark);' +
+        'letter-spacing:0;margin-top:4px">' + state.products.length + ' product(s)</h2></div>' +
+        '<button class="btn btn-primary" data-action="newProduct">+ New Product</button>' +
+      '</div>' +
+      (state.products.length === 0
+        ? '<p class="muted" style="margin-top:14px">No products yet.</p>'
+        : '<table style="margin-top:16px"><thead><tr>' +
+          '<th>ID</th><th>Name</th><th>Form</th><th>Status</th><th></th>' +
+          '</tr></thead><tbody>' +
+          state.products.map(function(p){
+            return '<tr><td>' + esc(p.id) + '</td><td><b>' + esc(p.name) + '</b></td>' +
+              '<td>' + esc(p.form) + '</td><td>' + statusPill(p.status) + '</td>' +
+              '<td><button class="btn btn-outline btn-xs" data-action="editProduct" ' +
+                'data-payload=\'' + JSON.stringify({product:p}).replace(/'/g,"&#39;") +
+                '\'>Edit</button></td></tr>';
+          }).join('') + '</tbody></table>') +
+    '</div><div id="panelSlot"></div>';
 }
 
-/* ============ BMR ============ */
-function renderBmr(){
-  if (!state.versions.length) { $('view').innerHTML = '<div class="card"><div class="empty-state"><h3>No versions yet</h3></div></div>'; return; }
+function openProductForm(p){
+  p = p || { id:'', name:'', category:'', form:DOSAGE_FORMS[0].name, delivery:'',
+            packSize:'', shelfLife:24, storage:'', status:PRODUCT_STATUSES[0] };
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>' + (p.id?'Edit':'New') + ' Product</h3>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Product ID</label><input id="pf_id" value="' + esc(p.id) + '" placeholder="auto"></div>' +
+      '<div class="field"><label>Name</label><input id="pf_name" value="' + esc(p.name) + '"></div>' +
+      '<div class="field"><label>Category</label><input id="pf_cat" value="' + esc(p.category) + '"></div>' +
+      '<div class="field"><label>Dosage Form</label><select id="pf_form">' +
+        DOSAGE_FORMS.map(function(d){
+          return '<option ' + (d.name===p.form?'selected':'') + '>' + d.name + '</option>';
+        }).join('') + '</select></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Pack Size</label><input id="pf_pack" value="' + esc(p.packSize) + '"></div>' +
+      '<div class="field"><label>Shelf Life (months)</label><input id="pf_shelf" type="number" value="' + (p.shelfLife||24) + '"></div>' +
+      '<div class="field"><label>Status</label><select id="pf_status">' +
+        PRODUCT_STATUSES.map(function(s){
+          return '<option ' + (s===p.status?'selected':'') + '>' + s + '</option>';
+        }).join('') + '</select></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:16px;justify-content:flex-end">' +
+      '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+      '<button class="btn btn-green" data-action="saveProduct">Save Product</button>' +
+    '</div></div>';
+}
+
+async function submitProduct(){
+  const p = {
+    id: $('pf_id').value.trim(), name: $('pf_name').value.trim(),
+    category: $('pf_cat').value.trim(), form: $('pf_form').value,
+    delivery:'', packSize: $('pf_pack').value.trim(),
+    shelfLife: parseFloat($('pf_shelf').value)||24, storage:'',
+    status: $('pf_status').value
+  };
+  if (!p.name) return alert('Name required');
+  try {
+    setStatus('Saving…');
+    await api('saveProduct', {product: p, user: state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = '';
+    await reload();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ================================================================
+   MATERIALS
+   ================================================================ */
+function renderMaterials(){
+  $('view').innerHTML =
+    navRow('materials') +
+    '<div class="bmr-card">' +
+      '<div class="row-between">' +
+        '<div><div class="eyebrow">Raw Materials Database</div>' +
+        '<h2 style="font-family:inherit;font-size:17px;color:var(--teal-dark);' +
+        'letter-spacing:0;margin-top:4px">' + state.materials.length + ' material(s)</h2></div>' +
+        '<button class="btn btn-primary" data-action="newMaterial">+ New Material</button>' +
+      '</div>' +
+      (state.materials.length === 0
+        ? '<p class="muted" style="margin-top:14px">No raw materials yet.</p>'
+        : '<div style="margin-top:16px">' +
+          '<input placeholder="Filter by name, ID, or category…" ' +
+          'style="width:100%;padding:8px 11px;border:1px solid var(--line);' +
+          'border-radius:8px;margin-bottom:12px" ' +
+          'oninput="state.matFilter=this.value;paintMaterials()" value="' + esc(state.matFilter||'') + '">' +
+          '<div id="matTable"></div></div>') +
+    '</div><div id="panelSlot"></div>';
+  if (state.materials.length) paintMaterials();
+}
+
+function paintMaterials(){
+  const q = (state.matFilter||'').toLowerCase();
+  const list = state.materials.filter(function(m){
+    return !q || m.name.toLowerCase().indexOf(q) >= 0 ||
+           m.id.toLowerCase().indexOf(q) >= 0 ||
+           (m.category||'').toLowerCase().indexOf(q) >= 0;
+  });
+  $('matTable').innerHTML =
+    '<table><thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Limit</th>' +
+    '<th>Cost ' + CURRENCY + '/kg</th><th></th></tr></thead><tbody>' +
+    list.map(function(m){
+      return '<tr><td>' + esc(m.id) + '</td><td><b>' + esc(m.name) + '</b></td>' +
+        '<td><small>' + esc(m.category) + '</small></td>' +
+        '<td>' + esc(m.limit) + '</td>' +
+        '<td>' + (m.cost ? money(m.cost) : '—') + '</td>' +
+        '<td><button class="btn btn-outline btn-xs" data-action="editMaterial" ' +
+          'data-payload=\'' + JSON.stringify({material:m}).replace(/'/g,"&#39;") +
+          '\'>Edit</button></td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function openMaterialForm(m){
+  m = m || { id:'', name:'', form:'', category:'', limit:'', density:'', cost:'', storage:'' };
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>' + (m.id?'Edit':'New') + ' Raw Material</h3>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Material ID</label><input id="mf_id" value="' + esc(m.id) + '" placeholder="auto"></div>' +
+      '<div class="field"><label>Name</label><input id="mf_name" value="' + esc(m.name) + '"></div>' +
+      '<div class="field"><label>Form</label><input id="mf_form" value="' + esc(m.form) + '"></div>' +
+      '<div class="field"><label>Category</label><input id="mf_cat" value="' + esc(m.category) + '"></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Max Limit</label><input id="mf_limit" value="' + esc(m.limit) + '" placeholder="e.g. 500 mg/day"></div>' +
+      '<div class="field"><label>Density (g/mL)</label><input id="mf_den" type="number" step="0.01" value="' + (m.density||'') + '"></div>' +
+      '<div class="field"><label>Cost ' + CURRENCY + '/kg</label><input id="mf_cost" type="number" step="0.01" value="' + (m.cost||'') + '"></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field" style="grid-column:1/-1"><label>Storage</label>' +
+        '<textarea id="mf_storage">' + esc(m.storage) + '</textarea></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:16px;justify-content:flex-end">' +
+      '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+      '<button class="btn btn-green" data-action="saveMaterial">Save Material</button>' +
+    '</div></div>';
+}
+
+async function submitMaterial(){
+  const m = {
+    id: $('mf_id').value.trim(), name: $('mf_name').value.trim(),
+    form: $('mf_form').value.trim(), category: $('mf_cat').value.trim(),
+    limit: $('mf_limit').value.trim(),
+    density: parseFloat($('mf_den').value)||0,
+    cost: parseFloat($('mf_cost').value)||0,
+    storage: $('mf_storage').value.trim()
+  };
+  if (!m.name) return alert('Name required');
+  try {
+    setStatus('Saving…');
+    await api('saveMaterial', {mat:m, user: state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = '';
+    await reload();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ================================================================
+   STEPS
+   ================================================================ */
+function renderSteps(){
+  if (!state.versions.length) {
+    $('view').innerHTML = navRow('steps') +
+      '<div class="empty-state"><h3>No versions yet</h3></div><div id="panelSlot"></div>';
+    return;
+  }
   const vid = state.stepsVersion || state.versions[0].versionId;
   state.stepsVersion = vid;
   $('view').innerHTML =
-    '<div class="card"><h2>BMR Compose</h2><div class="grid">' +
-    '<div class="field"><label>Version</label><select onchange="state.stepsVersion=this.value;loadBmr()">' +
-      state.versions.map(function(v){
-        return '<option value="' + v.versionId + '" ' + (v.versionId===vid?'selected':'') + '>' + esc(v.versionId) + '</option>';
-      }).join('') + '</select></div>' +
-    '<div class="field"><label>Batch No</label><input id="b_batch" value="B-XXX-0000-01"></div>' +
-    '<div class="field"><label>Batch Volume</label><input id="b_vol" type="number" value="' + state.batchVolume + '"></div>' +
-    '</div><div class="row" style="margin-top:14px">' +
-    '<button class="btn btn-primary" onclick="loadBmr()">Generate</button>' +
-    '<button class="btn btn-outline" onclick="window.print()">🖨 Print</button>' +
-    '</div></div><div id="bmrOut">Loading…</div>';
-  loadBmr();
-}
-async function loadBmr(){
-  const vid = state.stepsVersion;
-  const productId = vid.split('-V')[0];
-  const vol = parseFloat(($('b_vol')||{}).value) || 1000;
-  try {
-    const p = await api('getBmrPayload', {productId:productId, versionId:vid, batchVolume:vol});
-    paintBmr(p, vid);
-  } catch(e){ $('bmrOut').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
-}
-function paintBmr(p, vid){
-  const c = p.calc;
-  const vm = p.versionMeta || {};
-  $('bmrOut').innerHTML =
-    '<div class="card">' +
-    '<div style="text-align:center;padding-bottom:14px;border-bottom:2px solid var(--brand);margin-bottom:16px">' +
-    '<b style="font-size:16px">AFRAB CHEM LIMITED</b><br>' +
-    '<small class="muted">BATCH MANUFACTURING RECORD</small></div>' +
-    '<div class="grid"><div class="field"><label>Doc Ref</label><input value="' + esc(p.docRef) + '" readonly></div>' +
-    '<div class="field"><label>Version</label><input value="' + esc(vid) + '" readonly></div>' +
-    '<div class="field"><label>Stage</label><input value="' + esc(vm.stage||'—') + '" readonly></div>' +
-    '<div class="field"><label>Status</label><input value="' + esc(vm.status||'—') + '" readonly></div></div>' +
-    '<table style="margin-top:14px"><thead><tr><th>Item #</th><th>Ingredient</th><th>Phase</th>' +
-    '<th>Unit Dose</th><th>% w/w</th><th>Batch (kg)</th></tr></thead><tbody>' +
-    c.lines.map(function(l){
-      return '<tr><td>' + esc(l.recipeId) + '</td><td><b>' + esc(l.ingredient) + '</b></td>' +
-        '<td><small>' + esc(l.phase) + '</small></td>' +
-        '<td>' + l.unitQty + ' ' + esc(l.unit) + '</td>' +
-        '<td>' + l.pct + '%</td><td>' + l.batchKg + '</td></tr>';
-    }).join('') +
-    '<tr class="total-row"><td colspan="4">TOTAL</td><td>' + c.totalPct + '%</td>' +
-    '<td>' + c.lines.reduce(function(s,l){return s+l.batchKg;},0).toFixed(3) + '</td></tr>' +
-    '</tbody></table></div>';
+    navRow('steps') +
+    '<div class="bmr-card">' +
+      '<div class="row-between">' +
+        '<div><div class="eyebrow">Production Steps</div>' +
+        '<h2 style="font-family:monospace;font-size:17px;color:var(--teal-dark);' +
+        'letter-spacing:0;margin-top:4px">' + esc(vid) + '</h2></div>' +
+        '<button class="btn btn-primary" data-action="addStep">+ Add Step</button>' +
+      '</div>' +
+      '<div class="field-row" style="margin-top:16px">' +
+        '<div class="field"><label>Version</label>' +
+        '<select onchange="state.stepsVersion=this.value;loadSteps()">' +
+        state.versions.map(function(v){
+          return '<option value="' + v.versionId + '" ' +
+            (v.versionId===vid?'selected':'') + '>' + esc(v.versionId) +
+            ' • ' + esc(v.stage) + ' • ' + esc(v.status) + '</option>';
+        }).join('') + '</select></div>' +
+      '</div>' +
+      '<div id="stepsList" style="margin-top:16px">Loading…</div>' +
+    '</div><div id="panelSlot"></div>';
+  loadSteps();
 }
 
-/* ============ ARCHIVE ============ */
+async function loadSteps(){
+  try {
+    const steps = await api('getSteps', {versionId: state.stepsVersion});
+    state.steps = steps;
+    const el = $('stepsList');
+    if (!steps.length) {
+      el.innerHTML = '<p class="muted">No steps yet.</p>';
+      return;
+    }
+    el.innerHTML = steps.map(function(s){
+      return '<div style="background:var(--teal-soft);border:1px solid var(--line);' +
+        'border-radius:10px;padding:14px 16px;margin-bottom:12px">' +
+        '<div style="font-weight:700;color:var(--teal-dark);font-size:13.5px;margin-bottom:6px">' +
+        'Step ' + s.step + ' — ' + esc(s.stage||'') + '</div>' +
+        '<p style="margin:6px 0 10px;font-size:13.5px">' + esc(s.instruction) + '</p>' +
+        '<div class="row" style="margin-top:10px">' +
+          '<button class="btn btn-danger btn-xs" data-action="deleteStep" ' +
+            'data-payload=\'' + JSON.stringify({step:s.step}).replace(/'/g,"&#39;") +
+            '\'>Delete</button>' +
+        '</div></div>';
+    }).join('');
+  } catch(e){ $('stepsList').innerHTML = '<p class="status-strip error">' + esc(e.message) + '</p>'; }
+}
+
+function openStepForm(){
+  const next = state.steps.length
+    ? Math.max.apply(null, state.steps.map(function(x){return x.step;})) + 1
+    : 1;
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>New Step</h3>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Step #</label><input id="sf_step" type="number" value="' + next + '"></div>' +
+      '<div class="field"><label>Stage</label><input id="sf_stage"></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field" style="grid-column:1/-1"><label>Instruction *</label>' +
+        '<textarea id="sf_inst" style="min-height:80px"></textarea></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Equipment</label><input id="sf_eq"></div>' +
+      '<div class="field"><label>Target</label><input id="sf_target"></div>' +
+      '<div class="field"><label>IPC</label><input id="sf_ipc"></div>' +
+      '<div class="field"><label>Duration</label><input id="sf_dur"></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:16px;justify-content:flex-end">' +
+      '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+      '<button class="btn btn-green" data-action="saveStep">Save Step</button>' +
+    '</div></div>';
+}
+
+async function submitStep(){
+  const s = {
+    versionId: state.stepsVersion,
+    step: parseInt($('sf_step').value,10)||1,
+    stage: $('sf_stage').value.trim(),
+    instruction: $('sf_inst').value.trim(),
+    equipment: $('sf_eq').value.trim(),
+    target: $('sf_target').value.trim(),
+    ipc: $('sf_ipc').value.trim(),
+    duration: $('sf_dur').value.trim()
+  };
+  try {
+    await api('saveStep', {step: s, user: state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = '';
+    loadSteps();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+async function deleteStep(step){
+  if (!confirm('Delete step ' + step + '?')) return;
+  try {
+    await api('deleteStep', {versionId: state.stepsVersion, step: step,
+      user: state.currentUser ? state.currentUser.id : ''});
+    loadSteps();
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ================================================================
+   ARCHIVE
+   ================================================================ */
 async function renderArchive(){
-  $('view').innerHTML = '<div class="card"><h2>BMR Archive</h2><div id="archTable">Loading…</div></div>';
+  $('view').innerHTML = navRow('archive') +
+    '<div class="bmr-card"><div class="eyebrow">BMR Archive</div>' +
+    '<div id="archTable" style="margin-top:14px">Loading…</div></div>';
   try {
     const rows = await api('getArchive');
-    if (!rows.length) { $('archTable').innerHTML = '<p class="muted">No BMRs yet.</p>'; return; }
+    if (!rows.length) { $('archTable').innerHTML = '<p class="muted">No BMRs issued yet.</p>'; return; }
     $('archTable').innerHTML =
-      '<table><thead><tr><th>Doc Ref</th><th>Version</th><th>Product</th><th>Batch No</th>' +
-      '<th>Issued</th><th>Disposition</th></tr></thead><tbody>' +
+      '<table><thead><tr><th>Doc Ref</th><th>Version</th><th>Product</th>' +
+      '<th>Batch No</th><th>Issued At</th><th>Disposition</th></tr></thead><tbody>' +
       rows.slice().reverse().map(function(r){
-        return '<tr><td>' + esc(r.docRef) + '</td><td>' + esc(r.versionId) + '</td>' +
-          '<td>' + esc(r.productId) + '</td><td>' + esc(r.batchNo) + '</td>' +
+        return '<tr><td><span style="font-family:monospace">' + esc(r.docRef) + '</span></td>' +
+          '<td>' + esc(r.versionId) + '</td>' +
+          '<td>' + esc(r.productId) + '</td>' +
+          '<td>' + esc(r.batchNo) + '</td>' +
           '<td>' + esc(String(r.issuedAt).slice(0,19)) + '</td>' +
           '<td>' + statusPill(r.disposition) + '</td></tr>';
       }).join('') + '</tbody></table>';
-  } catch(e){ $('archTable').innerHTML = '<p class="status error">' + esc(e.message) + '</p>'; }
+  } catch(e){ $('archTable').innerHTML = '<p class="status-strip error">' + esc(e.message) + '</p>'; }
 }
 
-/* ============ RELOAD ============ */
+/* ================================================================
+   SETUP
+   ================================================================ */
+function renderSetup(){
+  $('view').innerHTML = navRow('setup') +
+    '<div class="bmr-card">' +
+      '<div class="eyebrow">Setup &amp; Health</div>' +
+      '<h2 style="font-family:inherit;font-size:17px;color:var(--teal-dark);' +
+      'letter-spacing:0;margin-top:4px">Backend connection status</h2>' +
+      '<div class="callout info" style="margin-top:16px">' +
+        '<b>Backend:</b> ' + esc(API_URL) + '<br>' +
+        '<b>Currency:</b> ' + CURRENCY + '<br>' +
+        '<b>Products loaded:</b> ' + state.products.length + '<br>' +
+        '<b>Materials loaded:</b> ' + state.materials.length + '<br>' +
+        '<b>Versions loaded:</b> ' + state.versions.length + '<br>' +
+        '<b>Users loaded:</b> ' + state.users.length +
+      '</div>' +
+      '<div class="row" style="margin-top:16px">' +
+        '<button class="btn btn-primary" data-action="reload">↻ Reload all data</button>' +
+      '</div>' +
+    '</div>';
+}
+
+/* ================================================================
+   BUTTON HANDLERS (AI, Template, Reset)
+   ================================================================ */
+function aiAssistant(){
+  alert('AI Assistant and Auto-Formulate are visual placeholders in this build.\n\n' +
+        'To wire them up, add an OpenAI or Gemini API key in Apps Script ' +
+        'Project Settings → Script Properties and extend the backend with an ' +
+        'aiAssist() function.');
+}
+
+function loadTemplate(){
+  const product = state.products.find(p => p.id === state.activeProduct);
+  if (!product) return alert('Pick a product first');
+  const form = detectForm(product.form);
+  const templates = {
+    TABLET: ['Active API','Microcrystalline Cellulose','Lactose Monohydrate',
+             'Povidone K30','Magnesium Stearate','Purified Water'],
+    CAPSULE: ['Active API','Lactose Monohydrate','Magnesium Stearate'],
+    SYRUP: ['Active API','Sucrose','Glycerin','Sodium Methyl Paraben',
+            'Sodium Propyl Paraben','Polysorbate 80','Purified Water'],
+    SUSPENSION: ['Active API','Xanthan Gum','Polysorbate 80',
+                 'Sodium Methyl Paraben','Sodium Propyl Paraben','Purified Water'],
+    SEMI_SOLID: ['Active API','White Petrolatum','Mineral Oil',
+                 'Cetyl Alcohol','Sodium Methyl Paraben','Purified Water'],
+    DRY_POWDER: ['Active API','Lactose Monohydrate','Colloidal Silicon Dioxide'],
+    INJECTION: ['Active API','Sodium Chloride','Water for Injection']
+  };
+  const wanted = templates[form.short] || [];
+  const available = state.materials.map(function(m){ return m.name.toLowerCase(); });
+  const matched = wanted.filter(function(w){
+    return available.some(function(a){ return a.indexOf(w.toLowerCase().split(' ')[0]) >= 0; });
+  });
+  if (!matched.length) {
+    alert('No matching raw materials for template: ' + form.short +
+          '\n\nAdd raw materials first, or use the ingredient picker.');
+    return;
+  }
+  openPicker();
+  setTimeout(function(){
+    document.querySelectorAll('.pick').forEach(function(cb){
+      const name = cb.getAttribute('data-mat').toLowerCase();
+      if (matched.some(function(w){ return name.indexOf(w.toLowerCase().split(' ')[0]) >= 0; })) {
+        cb.checked = true;
+        toggleRow(cb);
+      }
+    });
+    setStatus('Template for ' + form.short + ' — ' + matched.length +
+              ' ingredient(s) pre-selected. Enter quantities and save.');
+  }, 150);
+}
+
+function resetForm(){
+  state.activeVersion = state.activeProduct + '-V1.0';
+  state.batchVolume = 1000;
+  renderCompose();
+}
+
+function changeDosageForm(form){
+  const product = state.products.find(p => p.id === state.activeProduct);
+  if (!product) return;
+  const updated = Object.assign({}, product, { form: form });
+  api('saveProduct', {product: updated, user: state.currentUser ? state.currentUser.id : ''})
+    .then(function(){
+      setStatus('Dosage form set to ' + form);
+      reload();
+    })
+    .catch(function(e){ setStatus('Failed: ' + e.message, true); });
+}
+
+/* ================================================================
+   BMR ISSUANCE
+   ================================================================ */
+function openIssueForm(){
+  const product = state.products.find(p => p.id === state.activeProduct);
+  if (!product) return alert('Pick a product first');
+  $('panelSlot').innerHTML =
+    '<div class="panel"><h3>Save BMR / Log Issuance</h3>' +
+    '<div class="callout info">Appends an immutable record to the ' +
+    '<b>BMR Archive</b> tab.</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Doc Ref</label>' +
+        '<input value="' + esc(docRef(product.id)) + '" readonly></div>' +
+      '<div class="field"><label>Version</label>' +
+        '<input value="' + esc(state.activeVersion) + '" readonly></div>' +
+      '<div class="field"><label>Batch No</label><input id="if_batch" value="B-XXX-0000-01"></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field"><label>Yield Achieved</label>' +
+        '<input id="if_yield" placeholder="e.g. 98.6%"></div>' +
+      '<div class="field"><label>Disposition</label>' +
+        '<select id="if_disp"><option>RELEASED</option><option>QUARANTINE</option>' +
+        '<option>REJECTED</option><option>REWORK</option></select></div>' +
+    '</div>' +
+    '<div class="field-row">' +
+      '<div class="field" style="grid-column:1/-1"><label>Notes</label>' +
+        '<textarea id="if_notes"></textarea></div>' +
+    '</div>' +
+    '<div class="row" style="margin-top:16px;justify-content:flex-end">' +
+      '<button class="btn btn-outline" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>' +
+      '<button class="btn btn-green" data-action="submitIssue">Log Issuance</button>' +
+    '</div></div>';
+}
+
+async function submitIssue(){
+  const product = state.products.find(p => p.id === state.activeProduct);
+  const rec = {
+    docRef: docRef(product.id),
+    versionId: state.activeVersion,
+    productId: product.id,
+    batchNo: $('if_batch').value,
+    yieldAchieved: $('if_yield').value.trim(),
+    disposition: $('if_disp').value,
+    notes: $('if_notes').value.trim()
+  };
+  try {
+    await api('logIssuance', {record: rec, user: state.currentUser ? state.currentUser.id : ''});
+    $('panelSlot').innerHTML = '';
+    setStatus('BMR issuance logged to Archive.');
+  } catch(e){ setStatus('Failed: ' + e.message, true); }
+}
+
+/* ================================================================
+   RELOAD
+   ================================================================ */
 async function reload(){
   try {
     const d = await api('getAppData');
@@ -760,6 +1437,9 @@ async function reload(){
   } catch(e){ setStatus('Reload failed: ' + e.message, true); }
 }
 
+/* ================================================================
+   BOOT
+   ================================================================ */
 boot();
 </script>
 </body>
