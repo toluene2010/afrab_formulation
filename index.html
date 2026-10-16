@@ -161,13 +161,56 @@ margin-top:4px}
 border-radius:6px;transition:width .4s}
 .bar span{position:absolute;top:0;left:10px;line-height:22px;font-size:11px;
 color:#fff;font-weight:700}
+
+/* ================= BMR PRINT LAYOUT ================= */
+.bmr-doc{background:#fff;padding:30px 34px;border:1px solid var(--line);
+border-radius:12px;font-family:Georgia,"Times New Roman",serif;color:#1a1a1a}
+.bmr-doc .bhead{text-align:center;border-bottom:3px double #0d5751;
+padding-bottom:14px;margin-bottom:18px}
+.bmr-doc .bhead h1{font-family:Georgia,serif;font-size:20px;color:#0d5751;
+font-weight:700;letter-spacing:.5px;margin-bottom:4px}
+.bmr-doc .bhead .sub{font-size:11.5px;color:#4a5c5a;letter-spacing:1.5px;
+text-transform:uppercase;font-weight:600}
+.bmr-doc .bhead .org{font-size:12px;color:#1a2b2a;font-weight:600;margin-bottom:2px}
+.bmr-doc .doctitle{background:#0d5751;color:#fff;text-align:center;
+font-family:Georgia,serif;font-size:15px;padding:10px;letter-spacing:2px;
+text-transform:uppercase;font-weight:700;margin-bottom:18px;border-radius:4px}
+.bmr-doc h2{font-family:Georgia,serif;font-size:13px;color:#0d5751;
+border-bottom:1.5px solid #0d5751;padding-bottom:5px;margin:18px 0 10px;
+text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.bmr-doc .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;
+font-size:12.5px;line-height:1.7}
+.bmr-doc .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 20px;
+font-size:12.5px;line-height:1.7}
+.bmr-doc .kv{display:flex;gap:6px;align-items:baseline}
+.bmr-doc .kv .k{color:#4a5c5a;font-weight:600;min-width:120px;font-size:11.5px;
+text-transform:uppercase;letter-spacing:.3px}
+.bmr-doc .kv .v{color:#1a1a1a;font-weight:600;flex:1}
+.bmr-doc table{display:table;width:100%;border-collapse:collapse;font-size:11.5px;
+font-family:Georgia,serif;margin:10px 0}
+.bmr-doc table th,.bmr-doc table td{display:table-cell;border:1px solid #7a8a88;
+padding:6px 8px;text-align:left;vertical-align:top}
+.bmr-doc table th{background:#e6f4f1;color:#0d5751;font-size:10.5px;
+text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+.bmr-doc table tr.tot td{background:#f0f9f7;font-weight:700;border-top:2px solid #0d5751}
+.bmr-doc .qs{color:#0f7b4f;font-style:italic;font-size:10.5px}
+.bmr-doc .signbox{margin-top:14px;border:1px solid #7a8a88;padding:0}
+.bmr-doc .signbox table{margin:0}
+.bmr-doc .signbox th{background:#f0f9f7}
+.bmr-doc .footer{margin-top:22px;padding-top:12px;border-top:1px dashed #7a8a88;
+font-size:10.5px;color:#4a5c5a;font-style:italic;line-height:1.6}
+.bmr-doc .failmark{background:#fde5e9;border-left:4px solid #b00020;
+padding:10px 14px;font-size:12px;color:#6b0010;margin-bottom:14px;border-radius:4px}
+
 @media print{
-.topbar,.hero-actions,.nav,.eng,.acts,.status,.tiles,.dchips,.btn{display:none!important}
+.topbar,.hero,.nav,.eng,.acts,.status,.tiles,.dchips,.btn,.no-print{display:none!important}
 body{background:#fff;font-size:11px}
-.hero{background:#fff;padding:8px 0;border:none}
 .wrap{padding:0;max-width:100%}
-.card{box-shadow:none;border:none;padding:0;margin-bottom:10px;border-radius:0}
-table{font-size:10px}th,td{padding:4px 6px}
+.card{box-shadow:none;border:none;padding:0;margin-bottom:0;border-radius:0}
+.bmr-doc{border:none;border-radius:0;padding:0;font-size:11px}
+.bmr-doc table{page-break-inside:avoid}
+.bmr-doc h2{page-break-after:avoid}
+@page{size:A4;margin:14mm 12mm}
 }
 </style>
 </head>
@@ -231,7 +274,7 @@ const $ = id => document.getElementById(id);
 const S = {
   users:[],materials:[],products:[],versions:[],recipes:[],
   dashboard:null,me:null,tab:'bmr',
-  pid:'',ver:'',vol:1000,mode:'mass',calc:null,steps:[],stepsVer:'',matFilter:''
+  pid:'',ver:'',vol:1,mode:'mass',calc:null,steps:[],stepsVer:'',matFilter:''
 };
 
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -243,6 +286,8 @@ function pill(s){s=s||'';if(/pass|approv|releas|conform/i.test(s))return`<span c
 function stpill(s){s=s||'';if(/commercial/i.test(s))return`<span class="pill pill-ok">${esc(s)}</span>`;
   return`<span class="pill pill-st">${esc(s)}</span>`;}
 function setStatus(m,e){const el=$('status');if(!el)return;el.textContent=m||'';el.classList.toggle('err',!!e);}
+const todayLong = () => new Date().toLocaleDateString('en-GB',
+  {year:'numeric',month:'long',day:'2-digit'});
 
 async function api(action,payload){
   const r=await fetch(API_URL,{method:'POST',
@@ -284,7 +329,7 @@ const ACTS={
   changeForm:d=>changeForm(d.form),
   loadTpl:()=>loadTpl(),
   ai:()=>alert('AI Assistant is a visual placeholder in this build.'),
-  reset:()=>{S.ver=S.pid+'-V1.0';S.vol=1000;render();},
+  reset:()=>{S.ver=S.pid+'-V1.0';S.vol=1;render();},
   openIssue:()=>openIssueForm(),
   saveIssue:()=>saveIssue(),
   reload:()=>reload()
@@ -369,7 +414,6 @@ function viewDash(){
       `<div class="kpi"><div class="n">${c.failing||0}</div><div class="l">Failed</div></div>`+
       `<div class="kpi"><div class="n">${c.users||0}</div><div class="l">Users</div></div>`+
     '</div>'+
-
     '<div class="card"><div class="eyebrow">Products by Dosage Form</div>'+
     (Object.keys(d.byForm||{}).length===0?'<p class="mut" style="margin-top:10px">No products yet.</p>':
       Object.entries(d.byForm).map(([k,v])=>{
@@ -378,14 +422,12 @@ function viewDash(){
         <div class="bar"><div style="width:${pct}%"></div><span>${v} product(s)</span></div>`;
       }).join(''))+
     '</div>'+
-
     '<div class="card"><div class="eyebrow">Top Materials by Usage</div>'+
     ((d.topMaterials||[]).length===0?'<p class="mut" style="margin-top:10px">No recipes logged yet.</p>':
       '<table style="margin-top:10px"><thead><tr><th>Material</th><th>Times Used</th></tr></thead><tbody>'+
       d.topMaterials.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.count}</td></tr>`).join('')+
       '</tbody></table>')+
     '</div>'+
-
     '<div class="card"><div class="eyebrow">Failure Trend Analysis</div>'+
     (Object.keys(t.byCategory||{}).length===0?'<p class="mut" style="margin-top:10px">No failures logged yet.</p>':
       Object.entries(t.byCategory).sort((a,b)=>b[1]-a[1]).map(([k,v])=>
@@ -396,6 +438,9 @@ function viewDash(){
     '</div>';
 }
 
+/* ============================================================
+   COMPOSE — with printable BMR
+   ============================================================ */
 function viewCompose(){
   if(!S.products.length){
     $('view').innerHTML=navRow('bmr')+'<div class="empty"><h3>No products yet</h3><p>Add a product to start.</p></div>';
@@ -427,7 +472,7 @@ function viewCompose(){
       : 'Will count units using '+prod.unitWeightMg+' mg unit weight.');
 
   $('view').innerHTML=navRow('bmr')+tileGrid(st)+
-    '<div class="card"><div class="card-h"><div>'+
+    '<div class="card no-print"><div class="card-h"><div>'+
       '<div class="eyebrow">Batch Manufacturing Record (BMR)</div>'+
       '<div class="docr">'+(dref?esc(dref):'<span class="mut" style="font-family:inherit;font-size:13px">No version logged yet</span>')+'</div>'+
       '<div class="chips"><span class="chip">Stage: Pilot Batch Trial</span>'+
@@ -449,7 +494,7 @@ function viewCompose(){
         <div class="ct">${esc(f.s)}</div><div class="cs">${esc(f.d)}</div></button>`;
     }).join('')+'</div></div>'+
 
-    '<div class="card"><div class="eyebrow">Formulation Record</div>'+
+    '<div class="card no-print"><div class="eyebrow">Formulation Record</div>'+
     '<div class="frow" style="margin-top:12px">'+
       '<div class="f"><label>Product</label><select onchange="S.pid=this.value;S.ver=this.value+\'-V1.0\';viewCompose()">'+
       S.products.map(p=>`<option value="${p.id}" ${p.id===prod.id?'selected':''}>${esc(p.id)} — ${esc(p.name)}</option>`).join('')+
@@ -469,6 +514,8 @@ function viewCompose(){
       '<button class="btn btn-pri" data-a="pick">+ Add Ingredients</button></div>'+
     '</div>'+
     '<div id="calcSlot"></div></div>'+
+
+    '<div id="bmrPrint"></div>'+
     '<div id="pickerSlot"></div><div id="panelSlot"></div>';
 
   recalc();
@@ -481,13 +528,15 @@ async function recalc(){
     const c=await api('calculate',{productId:S.pid,versionId:S.ver,
       mode:S.mode,value:S.vol});
     S.calc=c;paintCalc(c);
+    await paintBmrPrint(c);
   }catch(e){el.innerHTML='<p class="status err">'+esc(e.message)+'</p>';}
 }
 
 function paintCalc(c){
   const over=c.lines.filter(l=>l.overLimit);
+  const pctLabel = (c.profile && c.profile.kind === 'liquid') ? '% w/v' : '% w/w';
   $('calcSlot').innerHTML=
-    (c.missingField?`<div class="callout warn"><b>Missing:</b> ${esc(c.missingField)} must be set in Product Master before yield can be calculated.</div>`:'')+
+    (c.missingField?`<div class="callout warn"><b>Missing:</b> ${esc(c.missingField)} must be set in Product Master.</div>`:'')+
     (over.length?`<div class="callout fail"><b>⚠ ${over.length} line(s) exceed daily limit</b>`+
       over.map(l=>'<br>• '+esc(l.ingredient)+' — '+l.dailyDose+' mg/day vs '+esc(l.matLimit)).join('')+'</div>':'')+
     (c.lines.length&&!c.balanced?`<div class="callout warn"><b>Not balanced:</b> ${c.totalPct}%</div>`:'')+
@@ -506,14 +555,14 @@ function paintCalc(c){
     '</div>'+
     '<div style="overflow-x:auto;margin-top:12px"><table><thead><tr>'+
       '<th>Recipe ID</th><th>Ingredient</th><th>Phase</th><th>Category</th>'+
-      '<th>Unit Qty</th><th>Over%</th><th>% w/w</th><th>Batch kg</th>'+
+      '<th>Unit Qty</th><th>Over%</th><th>'+pctLabel+'</th><th>Batch kg</th>'+
       `<th>Cost ${CUR}</th><th>Daily Dose</th><th>Limit</th><th>Check</th><th></th>`+
     '</tr></thead><tbody>'+
     (c.lines.length===0?
-      '<tr><td colspan="13" class="mut" style="text-align:center;padding:20px">No ingredients yet. Click <b>+ Add Ingredients</b>.</td></tr>':
+      '<tr><td colspan="13" class="mut" style="text-align:center;padding:20px">No ingredients yet.</td></tr>':
       c.lines.map(l=>`<tr>
         <td style="font-family:monospace">${esc(l.recipeId)}</td>
-        <td><b>${esc(l.ingredient)}</b>${l.isAutoQs ? ' <span style="color:#7a8a88;font-size:11px">(q.s. — auto)</span>' : ''}</td>
+        <td><b>${esc(l.ingredient)}</b>${l.isAutoQs?' <span style="color:#7a8a88;font-size:11px">(q.s. — auto)</span>':''}</td>
         <td><small>${esc(l.phase)}</small></td>
         <td><small>${esc(l.matCategory)}</small></td>
         <td>${l.unitQty} ${esc(l.unit)}</td>
@@ -533,6 +582,195 @@ function paintCalc(c){
     '</tbody></table></div>';
 }
 
+/* ============================================================
+   PRINTABLE BMR DOCUMENT
+   ============================================================ */
+async function paintBmrPrint(c){
+  const el=$('bmrPrint');if(!el)return;
+  const prod=c.product;
+  const vs=S.versions.filter(v=>v.productId===prod.id);
+  let versionMeta=null, dref=null, stageCode='LAB';
+  if(vs.length){
+    versionMeta=vs[vs.length-1];
+    stageCode=/pilot/i.test(versionMeta.stage)?'PLT':/commercial/i.test(versionMeta.stage)?'COM':
+      /stability/i.test(versionMeta.stage)?'STB':'LAB';
+    dref='BMR-'+stageCode+'-'+prod.id.replace('PRD-','PRD')+'-'+String(vs.length).padStart(2,'0');
+  }
+  let steps=[];
+  try{ if(S.ver) steps=await api('getSteps',{versionId:S.ver}); }catch(e){}
+
+  const findUser = role => S.users.find(u=>(u.role||'').toLowerCase().includes(role.toLowerCase()))||{};
+  const formulator = findUser('Formulator');
+  const qa = findUser('QA Signatory');
+  const director = findUser('Authorizing Director');
+  const fail = versionMeta && /^FAIL$/i.test(versionMeta.status);
+
+  const isLiquid = c.profile.kind === 'liquid';
+  const pctLabel = isLiquid ? '% w/v' : (c.profile.kind === 'semisolid' ? '% w/w' : '% w/w');
+
+  el.innerHTML = `
+    <div class="card no-print" style="padding:8px 20px">
+      <div class="eyebrow" style="margin-bottom:0">Printable BMR — press Print to output on A4</div>
+    </div>
+    <div class="bmr-doc">
+      <div class="bhead">
+        <div class="org">AFRAB CHEM LIMITED</div>
+        <h1>Batch Manufacturing Record</h1>
+        <div class="sub">Quality Assurance &amp; Manufacturing Division</div>
+        <div class="sub" style="margin-top:6px;font-size:10px;letter-spacing:1px">
+          cGMP COMPLIANT • SCHEDULE M / WHO PQS
+        </div>
+      </div>
+
+      <div class="doctitle">Master Formulation Record — ${esc(dref||'Not Yet Issued')}</div>
+
+      ${fail?`<div class="failmark">
+        ⚠ FAILED TRIAL VERSION — NOT FOR PRODUCTION<br>
+        <b>Category:</b> ${esc(versionMeta.failureCategory||'—')}<br>
+        <b>Reason:</b> ${esc(versionMeta.failureReason||'—')}<br>
+        <b>CAPA:</b> ${esc(versionMeta.correctiveAction||'—')}
+      </div>`:''}
+
+      <h2>1. Document Control</h2>
+      <div class="grid2">
+        <div class="kv"><span class="k">Document Ref:</span><span class="v">${esc(dref||'—')}</span></div>
+        <div class="kv"><span class="k">Version ID:</span><span class="v">${esc(S.ver||'—')}</span></div>
+        <div class="kv"><span class="k">Product Code:</span><span class="v">${esc(prod.id)}</span></div>
+        <div class="kv"><span class="k">Product Name:</span><span class="v">${esc(prod.name)}</span></div>
+        <div class="kv"><span class="k">Dosage Form:</span><span class="v">${esc(prod.form)}</span></div>
+        <div class="kv"><span class="k">Therapeutic:</span><span class="v">${esc(prod.category||'—')}</span></div>
+        <div class="kv"><span class="k">Trial Stage:</span><span class="v">${esc(versionMeta?versionMeta.stage:'—')}</span></div>
+        <div class="kv"><span class="k">Trial Status:</span><span class="v">${esc(versionMeta?versionMeta.status:'—')}</span></div>
+        <div class="kv"><span class="k">Effective Date:</span><span class="v">${todayLong()}</span></div>
+        <div class="kv"><span class="k">Pack Size:</span><span class="v">${esc(prod.packSize||'—')}</span></div>
+        <div class="kv"><span class="k">Container:</span><span class="v">${esc(prod.containerType||'—')}</span></div>
+        <div class="kv"><span class="k">Shelf Life:</span><span class="v">${esc(prod.shelfLife||'—')} months</span></div>
+        <div class="kv" style="grid-column:1/-1"><span class="k">Storage:</span><span class="v">${esc(prod.storage||'—')}</span></div>
+      </div>
+
+      <h2>2. Batch Compounding Scale</h2>
+      <div class="grid2">
+        <div class="kv"><span class="k">Batch Mode:</span><span class="v">${c.mode==='mass'?'By Mass / Volume':'By Unit Count'}</span></div>
+        <div class="kv"><span class="k">Batch ${isLiquid?'Volume':'Mass'}:</span><span class="v">${c.batchMassKg} ${isLiquid?'L':'kg'}</span></div>
+        <div class="kv"><span class="k">Theoretical ${esc(c.unitLabel)}:</span><span class="v">${c.unitCount.toLocaleString()}</span></div>
+        <div class="kv"><span class="k">Packs (${esc(c.packLabel)}):</span><span class="v">${c.packCount.toLocaleString()}</span></div>
+        <div class="kv"><span class="k">Calculation Basis:</span><span class="v">${esc(c.profile.basis)}</span></div>
+        <div class="kv"><span class="k">Balance:</span><span class="v">${c.totalPct}% (${c.balanced?'BALANCED':'CHECK'})</span></div>
+      </div>
+
+      <h2>3. Master Bill of Materials</h2>
+      <table>
+        <thead><tr>
+          <th style="width:80px">Recipe ID</th>
+          <th>Ingredient</th>
+          <th>Phase</th>
+          <th style="width:80px">Unit Dose</th>
+          <th style="width:55px">${pctLabel}</th>
+          <th style="width:75px">Batch kg</th>
+          <th style="width:70px">Cost</th>
+        </tr></thead>
+        <tbody>
+          ${c.lines.length===0
+            ? '<tr><td colspan="7" style="text-align:center;color:#7a8a88">No formulation lines.</td></tr>'
+            : c.lines.map(l=>`<tr>
+                <td style="font-family:monospace;font-size:10px">${esc(l.recipeId)}</td>
+                <td><b>${esc(l.ingredient)}</b>${l.isAutoQs?' <span class="qs">(q.s. — auto)</span>':''}</td>
+                <td style="font-size:10.5px">${esc(l.phase)}</td>
+                <td>${l.unitQty} ${esc(l.unit)}</td>
+                <td>${l.pct}%</td>
+                <td>${l.batchKg}</td>
+                <td>${l.costPerBatch?money(l.costPerBatch):'—'}</td>
+              </tr>`).join('')}
+          ${c.lines.length?`<tr class="tot">
+            <td colspan="4" style="text-align:right">TOTAL</td>
+            <td>${c.totalPct}%</td>
+            <td>${c.lines.reduce((s,l)=>s+l.batchKg,0).toFixed(3)}</td>
+            <td>${money(c.totalCost)}</td>
+          </tr>`:''}
+        </tbody>
+      </table>
+
+      <h2>4. Compounding Process Instructions</h2>
+      ${steps.length===0
+        ? '<p style="font-size:11.5px;color:#7a8a88;font-style:italic">No production steps recorded for this version.</p>'
+        : `<table>
+            <thead><tr>
+              <th style="width:40px">#</th>
+              <th style="width:120px">Stage</th>
+              <th>Instruction</th>
+              <th style="width:130px">Equipment</th>
+              <th style="width:120px">Target Spec</th>
+              <th style="width:120px">IPC Check</th>
+              <th style="width:70px">Duration</th>
+            </tr></thead>
+            <tbody>
+              ${steps.map(s=>`<tr>
+                <td>${s.step}</td>
+                <td style="font-size:10.5px">${esc(s.stage||'')}</td>
+                <td>${esc(s.instruction)}</td>
+                <td style="font-size:10.5px">${esc(s.equipment||'')}</td>
+                <td style="font-size:10.5px">${esc(s.target||'')}</td>
+                <td style="font-size:10.5px">${esc(s.ipc||'')}</td>
+                <td style="font-size:10.5px">${esc(s.duration||'')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>`}
+
+      <h2>5. cGMP Three-Party Quality Authorization</h2>
+      <div class="signbox">
+        <table>
+          <thead><tr>
+            <th style="width:170px">Role</th>
+            <th>Signatory</th>
+            <th style="width:170px">Title</th>
+            <th style="width:110px">Sign-off</th>
+            <th style="width:100px">Date</th>
+            <th style="width:110px">Disposition</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>Lead Formulator</td>
+              <td><b>${esc(formulator.name||'—')}</b></td>
+              <td style="font-size:10.5px">${esc(formulator.title||'—')}</td>
+              <td><i>${esc(formulator.signoff||'—')}</i></td>
+              <td>${todayLong()}</td>
+              <td>${versionMeta&&/PASS/i.test(versionMeta.status)?'<b style="color:#0f7b4f">APPROVED</b>':'<span style="color:#a86a00">PENDING</span>'}</td>
+            </tr>
+            <tr>
+              <td>QA Reviewer</td>
+              <td><b>${esc(qa.name||'—')}</b></td>
+              <td style="font-size:10.5px">${esc(qa.title||'—')}</td>
+              <td><i>${esc(qa.signoff||'—')}</i></td>
+              <td>${todayLong()}</td>
+              <td>${versionMeta&&/PASS/i.test(versionMeta.status)?'<b style="color:#0f7b4f">APPROVED</b>':'<span style="color:#a86a00">PENDING</span>'}</td>
+            </tr>
+            <tr>
+              <td>Authorizing Director</td>
+              <td><b>${esc(director.name||'—')}</b></td>
+              <td style="font-size:10.5px">${esc(director.title||'—')}</td>
+              <td><i>${esc(director.signoff||'—')}</i></td>
+              <td>${todayLong()}</td>
+              <td>${versionMeta&&/PASS/i.test(versionMeta.status)?'<b style="color:#0f7b4f">RELEASED</b>':'<span style="color:#a86a00">PENDING</span>'}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        <b>Regulatory Certification:</b> This master batch manufacturing record for
+        ${esc(prod.id)} — ${esc(prod.name)} conforms to NAFDAC, cGMP, and BP/USP standards
+        when signed by all three parties above. Generated ${todayLong()} • Doc Ref ${esc(dref||'—')}.
+        <br>
+        <b>Reproduction:</b> Uncontrolled when printed — verify against the master record
+        before use.
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   PICKER
+   ============================================================ */
 function openPicker(){
   const p=S.products.find(x=>x.id===S.pid);
   if(!p)return alert('Pick a product first');
@@ -616,6 +854,9 @@ async function delRecipe(rid){
   catch(e){setStatus('Failed: '+e.message,true);}
 }
 
+/* ============================================================
+   PRODUCTS
+   ============================================================ */
 function viewProds(){
   $('view').innerHTML=navRow('products')+
     '<div class="card"><div class="row-b">'+
@@ -664,7 +905,7 @@ function openProdForm(p){
         PROD_ST.map(s=>`<option ${s===p.status?'selected':''}>${s}</option>`).join('')+'</select></div>'+
       `<div class="f" style="grid-column:1/-1"><label>Storage</label><input id="pf_sg" value="${esc(p.storage)}"></div>`+
     '</div>'+
-    '<div class="callout info">Fill the physical attributes that match the dosage form: Unit Weight for tablets/capsules, Fill Volume for liquids, Fill Weight for creams/sachets.</div>'+
+    '<div class="callout info">Fill the physical attributes matching the dosage form: Unit Weight for tablets/capsules, Fill Volume for liquids, Fill Weight for creams/sachets.</div>'+
     '<div class="row" style="justify-content:flex-end;margin-top:14px">'+
       '<button class="btn btn-out" onclick="$(\'panelSlot\').innerHTML=\'\'">Cancel</button>'+
       '<button class="btn btn-grn" data-a="saveProd">Save Product</button>'+
@@ -686,6 +927,9 @@ async function saveProd(){
   }catch(e){setStatus('Failed: '+e.message,true);}
 }
 
+/* ============================================================
+   MATERIALS
+   ============================================================ */
 function viewMats(){
   $('view').innerHTML=navRow('materials')+
     '<div class="card"><div class="row-b">'+
@@ -748,6 +992,9 @@ async function saveMat(){
   }catch(e){setStatus('Failed: '+e.message,true);}
 }
 
+/* ============================================================
+   TRIALS / STEPS / ARCHIVE / PIPELINE / SETUP
+   ============================================================ */
 function viewTrials(){
   if(!S.products.length){
     $('view').innerHTML=navRow('trials')+'<div class="empty"><h3>No products yet</h3></div><div id="panelSlot"></div>';
@@ -941,6 +1188,9 @@ function viewSetup(){
     '</div></div>';
 }
 
+/* ============================================================
+   UTILS
+   ============================================================ */
 function detectForm(f){
   f=String(f||'').toLowerCase();
   if(/tablet|caplet/.test(f))return FORMS[0];
@@ -952,7 +1202,6 @@ function detectForm(f){
   if(/inject|vial|ampoule/.test(f))return FORMS[6];
   return FORMS[0];
 }
-
 async function changeForm(f){
   const p=S.products.find(x=>x.id===S.pid);if(!p)return;
   try{
