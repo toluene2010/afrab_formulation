@@ -180,10 +180,8 @@ border-bottom:1.5px solid #0d5751;padding-bottom:5px;margin:18px 0 10px;
 text-transform:uppercase;letter-spacing:1px;font-weight:700}
 .bmr-doc .grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;
 font-size:12.5px;line-height:1.7}
-.bmr-doc .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 20px;
-font-size:12.5px;line-height:1.7}
 .bmr-doc .kv{display:flex;gap:6px;align-items:baseline}
-.bmr-doc .kv .k{color:#4a5c5a;font-weight:600;min-width:120px;font-size:11.5px;
+.bmr-doc .kv .k{color:#4a5c5a;font-weight:600;min-width:130px;font-size:11.5px;
 text-transform:uppercase;letter-spacing:.3px}
 .bmr-doc .kv .v{color:#1a1a1a;font-weight:600;flex:1}
 .bmr-doc table{display:table;width:100%;border-collapse:collapse;font-size:11.5px;
@@ -280,6 +278,18 @@ const S = {
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => (n==null||isNaN(n))?'—':CUR+Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
 const money4 = n => (n==null||isNaN(n))?'—':CUR+Number(n).toLocaleString(undefined,{minimumFractionDigits:4,maximumFractionDigits:4});
+
+/* Smart weigh-out formatter — chooses g / kg / mg based on magnitude */
+function smartQty(kg){
+  const n = Number(kg) || 0;
+  if (n === 0) return '—';
+  const g = n * 1000;
+  if (g < 0.001) return (g * 1e6).toFixed(2) + ' µg';
+  if (g < 1)     return g.toFixed(3) + ' g';
+  if (g < 1000)  return g.toFixed(2) + ' g';
+  return n.toFixed(3) + ' kg';
+}
+
 function pill(s){s=s||'';if(/pass|approv|releas|conform/i.test(s))return`<span class="pill pill-ok">${esc(s)}</span>`;
   if(/fail|reject|discontinu|rework/i.test(s))return`<span class="pill pill-fail">${esc(s)}</span>`;
   return`<span class="pill pill-warn">${esc(s)}</span>`;}
@@ -535,6 +545,8 @@ async function recalc(){
 function paintCalc(c){
   const over=c.lines.filter(l=>l.overLimit);
   const pctLabel = (c.profile && c.profile.kind === 'liquid') ? '% w/v' : '% w/w';
+  const totalBatchKg = c.lines.reduce((s,l)=>s+l.batchKg,0);
+
   $('calcSlot').innerHTML=
     (c.missingField?`<div class="callout warn"><b>Missing:</b> ${esc(c.missingField)} must be set in Product Master.</div>`:'')+
     (over.length?`<div class="callout fail"><b>⚠ ${over.length} line(s) exceed daily limit</b>`+
@@ -543,7 +555,7 @@ function paintCalc(c){
     '<div class="frow" style="margin-top:12px">'+
       `<div class="f"><label>Dosage Form</label><input value="${esc(c.product.form)}" readonly></div>`+
       `<div class="f"><label>Basis</label><input value="${esc(c.profile.basis)}" readonly></div>`+
-      `<div class="f"><label>Batch Mass / Volume</label><input value="${c.batchMassKg} ${c.profile.kind==='liquid'?'L':'kg'}" readonly></div>`+
+      `<div class="f"><label>Batch ${c.profile.kind==='liquid'?'Volume':'Mass'}</label><input value="${c.batchMassKg} ${c.profile.kind==='liquid'?'L':'kg'}" readonly></div>`+
       `<div class="f"><label>Theoretical ${esc(c.unitLabel)}</label><input value="${c.unitCount.toLocaleString()}" readonly></div>`+
       `<div class="f"><label>Packs (${esc(c.packLabel)})</label><input value="${c.packCount.toLocaleString()}" readonly></div>`+
       `<div class="f"><label>Pack Size</label><input value="${c.packSize||'—'}" readonly></div>`+
@@ -555,11 +567,12 @@ function paintCalc(c){
     '</div>'+
     '<div style="overflow-x:auto;margin-top:12px"><table><thead><tr>'+
       '<th>Recipe ID</th><th>Ingredient</th><th>Phase</th><th>Category</th>'+
-      '<th>Unit Qty</th><th>Over%</th><th>'+pctLabel+'</th><th>Batch kg</th>'+
+      '<th>Unit Qty</th><th>Over%</th><th>'+pctLabel+'</th>'+
+      '<th>Batch Qty</th><th>Batch kg</th>'+
       `<th>Cost ${CUR}</th><th>Daily Dose</th><th>Limit</th><th>Check</th><th></th>`+
     '</tr></thead><tbody>'+
     (c.lines.length===0?
-      '<tr><td colspan="13" class="mut" style="text-align:center;padding:20px">No ingredients yet.</td></tr>':
+      '<tr><td colspan="14" class="mut" style="text-align:center;padding:20px">No ingredients yet.</td></tr>':
       c.lines.map(l=>`<tr>
         <td style="font-family:monospace">${esc(l.recipeId)}</td>
         <td><b>${esc(l.ingredient)}</b>${l.isAutoQs?' <span style="color:#7a8a88;font-size:11px">(q.s. — auto)</span>':''}</td>
@@ -568,18 +581,29 @@ function paintCalc(c){
         <td>${l.unitQty} ${esc(l.unit)}</td>
         <td>${l.overage||0}</td>
         <td>${l.pct}%</td>
-        <td>${l.batchKg}</td>
+        <td><b>${smartQty(l.batchKg)}</b></td>
+        <td><small class="mut">${l.batchKg} kg</small></td>
         <td>${l.costPerBatch?money(l.costPerBatch):'—'}</td>
         <td>${l.dailyDose}</td>
         <td><small>${esc(l.matLimit)}</small></td>
         <td>${l.overLimit?'<span class="pill pill-fail">OVER</span>':'<span class="pill pill-ok">OK</span>'}</td>
         <td><button class="btn btn-red btn-xs" data-a="delRecipe" data-p='${esc(JSON.stringify({recipeId:l.recipeId}))}'>✕</button></td>
       </tr>`).join(''))+
-    (c.lines.length?`<tr class="tot"><td colspan="6">TOTAL</td>
+    (c.lines.length?`<tr class="tot">
+      <td colspan="6">TOTAL</td>
       <td>${c.totalPct}%</td>
-      <td>${c.lines.reduce((s,l)=>s+l.batchKg,0).toFixed(3)}</td>
-      <td>${money(c.totalCost)}</td><td colspan="4">${c.balanced?'Balanced':'Adjust q.s.'}</td></tr>`:'')+
-    '</tbody></table></div>';
+      <td><b>${smartQty(totalBatchKg)}</b></td>
+      <td>${totalBatchKg.toFixed(3)} kg</td>
+      <td>${money(c.totalCost)}</td>
+      <td colspan="4">${c.balanced?'Balanced':'Adjust q.s.'}</td>
+    </tr>`:'')+
+    '</tbody></table></div>'+
+    (c.lines.length ?
+      '<div class="callout info" style="margin-top:12px">'+
+        '<b>Weigh-out totals for this batch:</b> '+
+        c.lines.filter(l=>!l.isAutoQs).map(l=>esc(l.ingredient)+' — <b>'+smartQty(l.batchKg)+'</b>').join(' • ')+
+        (c.lines.some(l=>l.isAutoQs)?' • <i>Add q.s. vehicle to volume.</i>':'')+
+      '</div>' : '');
 }
 
 /* ============================================================
@@ -607,6 +631,7 @@ async function paintBmrPrint(c){
 
   const isLiquid = c.profile.kind === 'liquid';
   const pctLabel = isLiquid ? '% w/v' : (c.profile.kind === 'semisolid' ? '% w/w' : '% w/w');
+  const totalBatchKg = c.lines.reduce((s,l)=>s+l.batchKg,0);
 
   el.innerHTML = `
     <div class="card no-print" style="padding:8px 20px">
@@ -658,7 +683,7 @@ async function paintBmrPrint(c){
         <div class="kv"><span class="k">Balance:</span><span class="v">${c.totalPct}% (${c.balanced?'BALANCED':'CHECK'})</span></div>
       </div>
 
-      <h2>3. Master Bill of Materials</h2>
+      <h2>3. Master Bill of Materials (Weigh-out Sheet)</h2>
       <table>
         <thead><tr>
           <th style="width:80px">Recipe ID</th>
@@ -666,8 +691,8 @@ async function paintBmrPrint(c){
           <th>Phase</th>
           <th style="width:80px">Unit Dose</th>
           <th style="width:55px">${pctLabel}</th>
-          <th style="width:75px">Batch kg</th>
-          <th style="width:70px">Cost</th>
+          <th style="width:90px">Batch Qty</th>
+          <th style="width:80px">Dispense</th>
         </tr></thead>
         <tbody>
           ${c.lines.length===0
@@ -678,14 +703,14 @@ async function paintBmrPrint(c){
                 <td style="font-size:10.5px">${esc(l.phase)}</td>
                 <td>${l.unitQty} ${esc(l.unit)}</td>
                 <td>${l.pct}%</td>
-                <td>${l.batchKg}</td>
-                <td>${l.costPerBatch?money(l.costPerBatch):'—'}</td>
+                <td><b>${smartQty(l.batchKg)}</b></td>
+                <td style="font-size:10px;color:#4a5c5a">☐</td>
               </tr>`).join('')}
           ${c.lines.length?`<tr class="tot">
             <td colspan="4" style="text-align:right">TOTAL</td>
             <td>${c.totalPct}%</td>
-            <td>${c.lines.reduce((s,l)=>s+l.batchKg,0).toFixed(3)}</td>
-            <td>${money(c.totalCost)}</td>
+            <td>${smartQty(totalBatchKg)}</td>
+            <td></td>
           </tr>`:''}
         </tbody>
       </table>
